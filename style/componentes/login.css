@@ -1,7 +1,15 @@
 .login__link{
-    font-style: none;
-    background-color: var(--marron);
-    padding: 12px 15px;
-    border-radius: 20px;
     text-decoration: none;
+    color: var(--text-color);
+    text-align: center;
+    justify-content: center;
+}
+
+.login__crearcuenta{
+    text-decoration: none;
+    color: var(--text-color);
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 }

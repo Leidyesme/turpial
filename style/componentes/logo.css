@@ -1,8 +1,4 @@
-.container {
-    
-}
-
-.logo-circle {
+.login__img {
     background-color: var(--beige);
     border-radius: 50%;
     width: 200px;
@@ -13,3 +9,4 @@
     align-items: center;
     overflow: hidden;
 }
+
