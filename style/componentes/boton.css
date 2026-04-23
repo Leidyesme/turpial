@@ -1,0 +1,11 @@
+.btn-ingresar {
+    background-color: var(--rojo);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+}
