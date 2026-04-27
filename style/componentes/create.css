@@ -1,0 +1,15 @@
+.create__link{
+    text-decoration: none;
+    color: var(--text-color);
+    text-align: center;
+    justify-content: center;
+}
+
+.create__crearcuenta{
+    text-decoration: none;
+    color: var(--text-color);
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}

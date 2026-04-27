@@ -1,4 +1,4 @@
-.login__boton {
+.rojo {
     background-color: var(--rojo);
     color: var(--text-color);
     border: none;
@@ -6,5 +6,39 @@
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
-    width: 85%;
+    width: 38%;
+}
+
+.verde{
+    background-color: var(--verde);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 30%;
+    margin: 5px 10px;
+}
+
+.marron{
+    background-color: var(--marron);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 35%;
+    
+}
+
+.beige{
+    background-color: var(--beige);
+    color: var(--text-color);
+    border: none;
+    padding: 12px 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
 }
