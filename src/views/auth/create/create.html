@@ -10,16 +10,19 @@
     <div class="container">
         <div class="create">
             <img src="../../../../public/turpial.png" class="create__img img" alt="El turplial logo">
+            <h1 class="create__title">Crea tu cuenta</h1>
             <form id="registroForm" class="create__form">
                 <input type="text" class="create__input input" id="nombre" placeholder="Nombre completo" required>
                 <input type="text" class="create__input input" id="correo" placeholder="Correo  electrónico" required>
                 <input type="text" class="create__input input" id="telefono" placeholder="Teléfono" required>
                 <input type="password" class="create__input input" id="contraseña" placeholder="Contraseña" required>
                 <div class="create__buttons">
-                    <a href="../create/create.html" class="create__cancelar"><button type="button" class="create__btn verde">Cancelar</button></a>
-                    <a href="../categories/categories.html" class="create__crear"><button type="submit" class="create__btn verde">Crear</button></a>
+                    <a href="../create/create.html" class="create__cancelar"><button type="button" class="btn btn--verde">Cancelar</button></a>
+                    <a href="../../cliente/categories/categories.html" class="create__crear"> <button type="button" class="btn btn--verde">Crear</button></a>
                 </div>
-                <a href="../login/login.html" class="create__link">Ya tengo cuenta. Iniciar sesión</a>
+                <div class="links">
+                    <a href="../login/login.html" class="link__item">Ya tengo cuenta. Iniciar sesión</a>
+                </div>
             </form>  
         </div>
     </div>  

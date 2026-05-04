@@ -1,5 +1,56 @@
 .container{
     text-align: center;
     justify-content: center;
-    margin: 5px;
 }
+
+.categories{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section{
+    background-color: var(--beige);
+    border-radius: 15px;
+    padding:10px;
+    margin: 10px;
+    width: 310px;
+    height: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imgforma{
+    width: 310px;
+    height: 200px;
+    border-radius: 15px 15px 0 0;    
+    margin-top:-10px
+}
+
+.breakfast, .lunch , .bakery{
+    /* margin-top: 250px; */
+} 
+
+.state{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.breakfast__description{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont__img{}

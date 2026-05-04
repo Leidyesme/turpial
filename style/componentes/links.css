@@ -1,0 +1,13 @@
+.links{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.link__item{
+    text-decoration: none;
+    color: var(--text-color);
+}

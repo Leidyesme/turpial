@@ -1,8 +1,18 @@
+
+/* Componentes */
 @import "../style/componentes/boton.css";
-@import "../style/global/input.css";
-@import "../style/componentes/login.css";
+@import "../style/componentes/input.css";
+@import "../style/componentes/links.css";
 @import "../style/componentes/container.css";
-@import "../style/componentes/create.css";
-@import "../style/global/variables.css";
+@import "../style/componentes/menu.css";
+
+
+/* Layout */
 @import "../style/layout/layout.css";
-/* @import "../style/pages/" */
+
+
+/*Global */
+@import "../style/global/variables.css";
+
+/*Pages*/
+@import "../style/pages/" 

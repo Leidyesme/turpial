@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../../../../style/main.css">
 </head>
+
 <body>
     <div class="container">
         <div class="login">
             <div class="login__logo">
                 <img src="../../../../public/turpial.png" class="login__img img" alt="El Turpial Logo">
             </div>
-            
+
             <h2 class="login__title">Inicia tu Sesión</h2>
 
             <form id="login__Form">
                 <input type="email" class="login__input input" id="email" placeholder="Ingresa tu correo" required>
-                <input type="password" class="login__input input" id="contraseña" placeholder="Ingresa tu contraseña" required>
-                
-                <a href="../categories/categories.html"><button type="submit" class="login__boton rojo">Ingresar</button></a>
+                <input type="password" class="login__input input" id="contraseña" placeholder="Ingresa tu contraseña"
+                    required>
+
+                <a href="../../cliente/categories/categories.html"><button type="button" class="btn btn--rojo btn--rojo-width">Ingresar</button></a>
             </form>
-            <a href="../create/create.html" class="login__crearcuenta">¿Ya tienes sesión?Crea tu cuenta</a>
-            <a href="../recover-password/recover-password.html" class="login__link" >Recuperar contraseña</a>
+            <div class="links">
+                <a href="../recover-password/recoverPassword.html" class="link__item">Recuperar contraseña</a>
+                <a href="../create/create.html" class="link__item"><button class="btn btn--rojo">Crea tu cuenta</button></a>
+            </div>
         </div>
     </div>
 </body>
+
 </html>
