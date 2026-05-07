@@ -36,21 +36,8 @@
     margin-top:-10px
 }
 
-.breakfast, .lunch , .bakery{
-    /* margin-top: 250px; */
-} 
-
 .state{
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
-
-.breakfast__description{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.cont__img{}

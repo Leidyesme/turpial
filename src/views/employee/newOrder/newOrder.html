@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="newOrder">
+            <h1 class="newOrder__title">Nuevo Pedido</h1>
+            <form class="newOrder__form">
+                <input type="text" class="newOrder__input input" placeholder="Nombre del cliente">
+                <div class="newOrder__check">
+                    <input type="checkbox" class="newOrder__checkbox input">
+                    <p class="newOrder__type">Para consumir aquí</p>
+                </div>
+                <div class="newOrder__check">
+                    <input type="checkbox" class="newOrder__checkbox input">
+                    <p class="newOrder__type">Para domicilio</p>
+                </div>
+                <div class="newOrder__check">
+                    <input type="checkbox" class="newOrder__checkbox input">
+                    <p class="newOrder__type">Para llevar</p>
+                </div>
+                <div class="newOrder__description">
+                    <p class="newOrder__description-title">Descripción del pedido:</p>
+                    <div class="newOrder__description-content">
+                        <img src="../../../../public/breakfast/breakfast3.png" alt="desayuno3" class="newOrder__img">
+                        <p class="newOrder__description-text">Sandwich de jamón y queso en pan integral</p>
+                        <p class="newOrder__price">$8.000</p>
+                        <!-- falta el de agregar cantidad -->
+                    </div>
+                    <p class="newOrder__add">Agregar producto</p>
+                    <input type="text" class="newOrder__input input" placeholder="Observaciones">
+                    <p class="newOrder__total">Total: $8.000</p>
+                </div>
+                
+                <button class="btn--rojo btn">Cancelar</button>
+                <button class="btn--verde btn">Registrar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

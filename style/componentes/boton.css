@@ -55,7 +55,17 @@
     padding: 10px;
 }
 
-.categories__link{
+.fa-house{
+    background-color: var(--beige);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.link{
     text-decoration: none;
     color: var(--text-color);
 }
