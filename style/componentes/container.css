@@ -41,3 +41,17 @@
     justify-content: space-between;
     width: 100%;
 }
+
+.manager__categories{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.manager__container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    padding: 15px;
+}

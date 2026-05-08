@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="manager">
+            <div class="manager__container">
+                <h1 class="manager__title">Admin</h1>
+                <i class="fa-solid fa-circle-user"></i>
+            </div>
+            <h2 class="manager__text">Bienvenido, Administrador</h2>
+            <div class="manager__categories">
+                <div class="manager__categories--foods">
+                    <img src="../../../../public/manager/foods.png" alt="Comidas" class="manager__category-img">
+                    <a href="#" class="manager__category">Comidas</a>
+                </div>
+                <div class="manager__categories--fast">
+                    <img src="../../../../public/manager/fastFood.png" alt="Comidas rapidas" class="manager__category-img">
+                    <a href="#" class="manager__category">Comidas rapidas</a>
+                </div>
+                <div class="manager__categories--promotions">
+                    <img src="../../../../public/manager/promotions.png" alt="Promociones" class="manager__category-img">
+                    <a href="#" class="manager__category">Promociones</a>
+                </div>
+            </div>
+            <h2 class="manager__categorias">Gestionar Categorías ></h2>
+            <div class="manager__item">
+                <i class="fa-solid fa-users"></i>
+                <h3 class="manager__item-title">Gestión de Empleados</h3>
+                <p>8 Empleados</p>
+                <a href="../employees/employees.html" class="manager__employees"><button class="manager__btn">Ver empleados ></button></a>
+            </div>
+            <div class="manager__item">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <h3 class="manager__item-title">Gestión de Productos</h3>
+                <p class="manager__cant">45 Productos</p>
+                <a href="../menu/menu.html" class="manager__products"><button class="manager__btn">Ver Productos ></button></a>
+            </div>
+            <h2 class="manager__orders">Pedidos Recientes ></h2>
+            <div class="manager__table">
+                <table class="data-table">
+                    <thead class="data-table__header">
+                        <tr class="data-table__row">
+                            <th class="data-table__fact">N° Pedido</th>
+                            <th class="data-table__fact">Cliente</th>
+                            <th class="data-table__fact">Estado</th>
+                            <th class="data-table__fact">Fecha</th>
+                            <th class="data-table__fact">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="data-table__body">
+                        <tr class="data-table__row">
+                            <td class="data-table__fact">#1023</td>
+                            <td class="data-table__fact">Laura Gomez</td>
+                            <td class="data-table__fact">Pendiente</td>
+                            <td class="data-table__fact">2023-10-01</td>
+                            <td class="data-table__fact">$8.000</td>
+                        </tr>
+                        <tr class="data-table__row">
+                            <td class="data-table__fact">#1022</td>
+                            <td class="data-table__fact">Carlos Martinez</td>
+                            <td class="data-table__fact">Pendiente</td>
+                            <td class="data-table__fact">2023-10-01</td>
+                            <td class="data-table__fact">$16.000</td>
+                        </tr>
+                        <tr class="data-table__row">
+                            <td class="data-table__fact">#1021</td>
+                            <td class="data-table__fact">Ana Rodriguez</td>
+                            <td class="data-table__fact">En proceso</td>
+                            <td class="data-table__fact">2023-10-01</td>
+                            <td class="data-table__fact">$24.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h2 class="manager__orders">Ver todos los pedidos ></h2>
+            </div>
+
+    </div>
+</body>
+</html>

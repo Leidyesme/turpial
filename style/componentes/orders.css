@@ -61,3 +61,20 @@
     text-decoration: none;
     color: var(--text-color);
 } 
+
+.newOrder__img{
+    width: 180px;
+    height: 100px;
+    border-radius: 15px;
+}
+
+.newOrder__check{
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 200px;
+    height: 40px;
+    margin: 10px;
+    background-color: var(--beige);
+    border-radius: 15px;
+}

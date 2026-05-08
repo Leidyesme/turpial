@@ -69,3 +69,7 @@
     text-decoration: none;
     color: var(--text-color);
 }
+
+.fa-circle-user{
+    font-size: 25px;
+}
