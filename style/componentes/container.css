@@ -42,16 +42,30 @@
     width: 100%;
 }
 
-.manager__categories{
+.homePage__categories{
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-.manager__container{
+.homePage__container{
     display: flex;
     justify-content: space-between;
     width: 100%;
     align-items: center;
     padding: 15px;
+}
+
+.homePage__item{
+    background-color: var(--marron);
+    border-radius: 15px;
+    /* padding: 10px; */
+    width: 130px;
+    height:150px;
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: center; */
+    flex-direction: column;
+    color: var(--text-color);
+    font-weight: bold;
 }
