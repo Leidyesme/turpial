@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="./changeController.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="change">
@@ -17,7 +19,7 @@
                 <input type="password" class="change__input input" id="confirmarContraseña" placeholder="Confirmar nueva contraseña" required>
                 <div class="change__buttons">
                     <a href="../profile/profile.html" class="change__cancelar"><button type="button" class="btn btn--rojo">Cancelar</button></a>
-                    <a href="../../auth/login/login.html"><button type="button" class="btn btn--verde">Cambiar contraseña</button></a>
+                    <button type="button" class="btn btn--verde" id="changePasswordBtn">Cambiar contraseña</button>
                 </div>
             </form>  
         </div>

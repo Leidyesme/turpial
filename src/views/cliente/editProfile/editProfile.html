@@ -4,8 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
+    <script src="./editProfileController.js"></script>
 </head>
 <body>
-    
+    <div class="container">
+        <div class="editprofile">
+            <h1 class="editprofile__title">Editar Perfil</h1>
+            <div class="editprofile__form section">
+                <div class="form-group">
+                    <label for="name" >Nombre:</label>
+                    <input type="text" id="name" placeholder="Leidy Esmeralda Duarte Prada">
+                </div>
+                <div class="form-group">
+                    <label for="email" >Email:</label>
+                    <input type="email" id="email" placeholder="leidy@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone" >Teléfono:</label>
+                    <input type="tel" id="phone" placeholder="123-456-7890">
+                </div>
+                <button type="submit" class="btn btn--verde" id="saveProfileBtn">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
