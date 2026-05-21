@@ -1,0 +1,37 @@
+.homePage__img{
+    border-radius: 15px;
+}
+
+.homePage__category{
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 18px;
+}
+
+.homePage__categories--title{
+    background-color: var(--rojo);
+    border-radius: 15px;
+    /* width: 300px; */
+    margin: 2px 20px;
+}
+
+.homePage__item--categories{
+    background-color: var(--beige);
+    border-radius: 15px;
+    margin: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.homePage__edit{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.homePage__table{
+    background-color: var(--beige);
+    border-radius: 15px;
+    margin: 5px;
+}

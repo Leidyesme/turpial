@@ -6,6 +6,7 @@
 @import "../style/componentes/container.css";
 @import "../style/componentes/menu.css";
 @import "../style/componentes/orders.css";
+@import "../style/componentes/homePage.css";
 
 
 /* Layout */
@@ -16,4 +17,4 @@
 @import "../style/global/variables.css";
 
 /*Pages*/
-@import "../style/pages/" 
+/* @import "../style/pages/"  */

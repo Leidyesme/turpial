@@ -1,10 +1,48 @@
-document.querySelector('iniciarSesionForm').addEventListener('submit',function(e){
+const loginForm =
+document.querySelector('#login__Form');
+
+console.log(loginForm);
+
+loginForm.addEventListener('submit', function(e){
+
     e.preventDefault();
 
-    constusuario = {
-        correo : document.querySelector('correo').value,
-        contraseña : document.querySelector('contraseña').value,
-        estado : 'activo'
+    console.log('Formulario enviado');
+
+    const correo =
+    document.querySelector('#email').value;
+
+    const contraseña =
+    document.querySelector('#contraseña').value;
+
+    const usuarios =
+    JSON.parse(localStorage.getItem('usuarios'))
+    || [];
+
+    console.log(usuarios);
+
+    const usuarioEncontrado =
+    usuarios.find(usuario =>
+
+        usuario.correo === correo &&
+        usuario.contraseña === contraseña
+    );
+
+    console.log(usuarioEncontrado);
+
+    if(!usuarioEncontrado){
+
+        alert('Correo o contraseña incorrectos');
+
+        return;
     }
 
-})
+    localStorage.setItem(
+        'usuarioActivo',
+        JSON.stringify(usuarioEncontrado)
+    );
+
+    window.location.href =
+    '../../cliente/categories/categories.html';
+
+});

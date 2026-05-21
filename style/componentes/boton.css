@@ -73,3 +73,19 @@
 .fa-circle-user{
     font-size: 25px;
 }
+
+.fa-users{
+    font-size: 60px;
+}
+
+.fa-basket-shopping{
+    font-size: 60px;
+}
+
+.homePage__btn{
+    background-color: var(--rojo);
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-weight: bold;
+}
