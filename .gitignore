@@ -1,0 +1,3 @@
+/dist
+.env
+git checkout -b develop
