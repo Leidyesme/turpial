@@ -107,23 +107,28 @@ function setupRegister() {
 
 
         // CREAR USUARIO
-        const nuevoUsuario = {
+        const newUser = {
 
-            name,
-            email,
-            phone,
-            password,
+        name:
+            document.querySelector('#name').value,
 
-            rol: "cliente",
+        email:
+            document.querySelector('#email').value,
 
-            estado: "activo",
+        phone:
+            document.querySelector('#phone').value,
 
-            fecha_registro:
-                new Date()
-                .toISOString()
-                .split("T")[0]
+        password:
+            document.querySelector('#password').value,
 
-        };
+        role: 'ROL-003',
+
+        status: 'active',
+
+        registerDate:
+            new Date().toISOString().split('T')[0]
+
+};
 
 
         // GUARDAR

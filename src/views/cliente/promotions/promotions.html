@@ -13,15 +13,19 @@
             <h1 class="promotions__title">Promociones</h1>
             <div class="promotions__container">
                 <div class="promotions__item section">
-                    <div class="img"></div>
-                    <img src="../../../../public/promotions/promotions1.png" class="promotions__img imgforma" alt="Promoción 1">
-                    <div class="promotions__description">
-                        <h2 class="promotions__name">Arroz con pollo</h2>
-                        <p class="promotions__price">Precio: $5.000</p>
-                        <div class="promotions__state">
-                            <button class="btn btn--verde">Disponible</button>
-                            <a href="#" class="link__item"><i class="fa-solid fa-cart-shopping"></i></a>
-                        </div>  
+                    <img src="../../../../public/promotions/promo1.png" class="promotions__img imgforma" alt="Promoción 1">
+                    <h2 class="promotions__name"> Combo hamburguesa + papas</h2>
+                    <p class="promotions__old-price">Antes: $25.000</p>
+                    <p class="promotions__price">Ahora: $18.000</p>
+                    <div class="promotions__state state">
+                        <button class="btn btn--verde">Disponible</button>
+                        <a href="#"class="link__item add-to-cart"
+                            data-name="Combo hamburguesa + papas"
+                            data-price="18000"
+                            data-image="../../../../public/promotions/promo1.png"
+                            data-status="Disponible">
+                            <i class="fa-solid fa-cart-shopping"></i>   
+                        </a>
                     </div>
                 </div>
                 <div class="promotions__item section">
@@ -63,5 +67,6 @@
             </div>
         </div>
     </div>
+    <script src="../../../../js/cart/cart.js"></script>
 </body>
 </html>
