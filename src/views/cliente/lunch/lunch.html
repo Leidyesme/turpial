@@ -13,17 +13,19 @@
             <h1 class="lunch__title">Almuerzos</h1>
             <div class="lunch__container">
                 <div class="lunch__item section">
-                    <div class="img"></div>
                     <img src="../../../../public/lunch/lunch1.png" class="lunch__img imgforma" alt="Almuerzo 1">
-                    <div class="lunch__description">
-                        <h2 class="lunch__name">Arroz con pollo</h2>
-                        <p class="lunch__price">Precio: $6.000</p>
-                        <div class="lunch__state">
-                            <button class="btn btn--verde">Disponible</button>
-                            <a href="#" class="link__item"><i class="fa-solid fa-cart-shopping"></i></a>
-                        </div>  
+                    <h2 class="lunch__name">Arroz con pollo</h2>
+                    <p class="lunch__price">Precio: $6.000</p>
+                    <div class="lunch__state">
+                        <button class="btn btn--verde">Disponible</button>
+                        <a href="#" class="link__item add-to-cart"
+                            data-name="Arroz con pollo"
+                            data-price="6000"
+                            data-image="../../../../public/lunch/lunch1.png"
+                            data-status="Disponible">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
                     </div>
-                    
                 </div>
                 <div class="lunch__item section">
                     <img src="../../../../public/lunch/lunch2.png" class="lunch__img imgforma" alt="Almuerzo 2">
@@ -31,7 +33,13 @@
                     <p class="lunch__price">Precio: $8.000</p>
                     <div class="lunch__state">
                         <button class="btn btn--rojo">Agotado</button>
-                        <a href="#" class="link__item"><i class="fa-solid fa-cart-shopping"></i></a>
+                        <a href="#" class="link__item add-to-cart"
+                            data-name="Ajiaco Santafereño"
+                            data-price="8000"
+                            data-image="../../../../public/lunch/lunch2.png"
+                            data-status="Agotado">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="lunch__item section">
@@ -40,11 +48,18 @@
                     <p class="lunch__price">Precio: $8.000</p>
                     <div class="lunch__state">
                         <button class="btn btn--verde">Disponible</button>
-                        <a href="#" class="link__item"><i class="fa-solid fa-cart-shopping"></i></a>
+                        <a href="#" class="link__item add-to-cart"
+                            data-name="Sudado de pollo y papa"
+                            data-price="8000"
+                            data-image="../../../../public/lunch/lunch3.png"
+                            data-status="Disponible">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../../../../js/cart/cart.js"></script>
 </body>
 </html>

@@ -1,25 +1,61 @@
-const codeForm =
-document.querySelector('#codeForm');
+document.addEventListener("DOMContentLoaded", () => {
 
-codeForm.addEventListener('submit', function(e){
-
-    e.preventDefault();
-
-    const codigo =
-    document.querySelector('#code').value;
-
-    if(codigo === '1234'){
-
-        alert('Código correcto');
-
-        window.location.href =
-        '../../cliente/categories/categories.html';
-
-    }
-
-    else{
-
-        alert('Código incorrecto');
-    }
+    setupCodeValidation();
 
 });
+
+
+function setupCodeValidation() {
+
+    const codeForm =
+        document.querySelector("#codeForm");
+
+
+    if (!codeForm) return;
+
+
+    codeForm.addEventListener("submit", (e) => {
+
+        e.preventDefault();
+
+
+        // OBTENER CÓDIGO INPUT
+        const inputCode =
+            document.querySelector("#code")
+            .value
+            .trim();
+
+
+        // VALIDAR VACÍO
+        if (!inputCode) {
+
+            alert("Debes ingresar el código");
+
+            return;
+        }
+
+
+        // OBTENER CÓDIGO GUARDADO
+        const savedCode =
+            localStorage.getItem("recoveryCode");
+
+
+        // VALIDAR CÓDIGO
+        if (inputCode !== savedCode) {
+
+            alert("Código incorrecto");
+
+            return;
+        }
+
+
+        alert("Código verificado correctamente");
+
+
+        // REDIRECCIONAR
+        window.location.href =
+            "../newPassword/newPassword.html";
+
+    });
+
+}
