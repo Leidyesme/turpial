@@ -1,13 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    setupPasswordChange();
+    setupChangePassword();
 
 });
 
 
-function setupPasswordChange() {
+function setupChangePassword() {
 
-    const form = document.getElementById("cambioForm");
+    const form =
+        document.querySelector("#cambioForm");
+
 
     if (!form) return;
 
@@ -17,73 +19,137 @@ function setupPasswordChange() {
         e.preventDefault();
 
 
+        // USUARIO ACTIVO
+        let activeUser =
+            JSON.parse(
+                localStorage.getItem("activeUser")
+            );
+
+
+        // VALIDAR SESIÓN
+        if (!activeUser) {
+
+            alert("You must log in");
+
+            window.location.href =
+                "../../auth/login/login.html";
+
+            return;
+
+        }
+
+
+        // USERS
+        let users =
+            JSON.parse(
+                localStorage.getItem("users")
+            )
+            || [];
+
+
+        // INPUTS
         const currentPassword =
-            document.getElementById("contraseñaActual").value.trim();
+            document.querySelector(
+                "#contraseñaActual"
+            ).value;
 
         const newPassword =
-            document.getElementById("nuevaContraseña").value.trim();
+            document.querySelector(
+                "#nuevaContraseña"
+            ).value;
 
         const confirmPassword =
-            document.getElementById("confirmarContraseña").value.trim();
+            document.querySelector(
+                "#confirmarContraseña"
+            ).value;
 
 
-        // VALIDAR CAMPOS VACÍOS
-        if (!currentPassword || !newPassword || !confirmPassword) {
+        // VALIDAR PASSWORD ACTUAL
+        if (
+            currentPassword !==
+            activeUser.password
+        ) {
 
-            alert("Todos los campos son obligatorios");
+            alert(
+                "Current password is incorrect"
+            );
 
             return;
+
         }
 
 
-        // VALIDAR LONGITUD
-        if (newPassword.length < 6) {
+        // VALIDAR NUEVA PASSWORD
+        if (
+            newPassword.length < 6
+        ) {
 
-            alert("La nueva contraseña debe tener mínimo 6 caracteres");
+            alert(
+                "Password must have at least 6 characters"
+            );
 
             return;
+
         }
 
 
-        // VALIDAR COINCIDENCIA
-        if (newPassword !== confirmPassword) {
+        // VALIDAR CONFIRMACIÓN
+        if (
+            newPassword !== confirmPassword
+        ) {
 
-            alert("Las contraseñas no coinciden");
+            alert(
+                "Passwords do not match"
+            );
 
             return;
+
         }
 
 
-        // OBTENER USUARIO
-        const user =
-            JSON.parse(localStorage.getItem("user")) || {};
+        // ACTUALIZAR PASSWORD
+        activeUser.password =
+            newPassword;
 
 
-        // VALIDAR CONTRASEÑA ACTUAL
-        if (user.password !== currentPassword) {
+        // ACTUALIZAR USERS
+        users = users.map((user) => {
 
-            alert("La contraseña actual es incorrecta");
+            if (
+                user.email ===
+                activeUser.email
+            ) {
 
-            return;
-        }
+                return activeUser;
+
+            }
+
+            return user;
+
+        });
 
 
-        // ACTUALIZAR CONTRASEÑA
-        user.password = newPassword;
-
-
+        // GUARDAR
         localStorage.setItem(
-            "user",
-            JSON.stringify(user)
+            "activeUser",
+            JSON.stringify(activeUser)
         );
 
 
-        alert("Contraseña actualizada correctamente");
+        localStorage.setItem(
+            "users",
+            JSON.stringify(users)
+        );
 
 
-        // REDIRIGIR LOGIN
+        alert(
+            "Password updated successfully"
+        );
+
+
+        // REDIRECCIONAR
         window.location.href =
-            "../../auth/login/login.html";
+            "../profile/profile.html";
 
     });
 

@@ -6,13 +6,12 @@
     <title>Document</title>
     <link rel="stylesheet" href="../../../../style/main.css">
     <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
-    <script src="./editProfileController.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="editprofile">
             <h1 class="editprofile__title">Editar Perfil</h1>
-            <div class="editprofile__form section">
+            <form class="editprofile__form section">
                 <div class="form-group">
                     <label for="name" >Nombre:</label>
                     <input type="text" id="name" placeholder="Leidy Esmeralda Duarte Prada">
@@ -26,8 +25,10 @@
                     <input type="tel" id="phone" placeholder="123-456-7890">
                 </div>
                 <button type="submit" class="btn btn--verde" id="saveProfileBtn">Guardar Cambios</button>
-            </div>
+            </form>
         </div>
     </div>
+    <script src="../../../../js/auth/authGuard.js"></script>
+    <script src="./editProfileController.js"></script>
 </body>
 </html>
