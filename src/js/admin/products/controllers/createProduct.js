@@ -1,14 +1,5 @@
-import {
-    getProducts,
-    saveProducts
-}
-from "../services/productService.js";
-
-
-import {
-    generateId
-}
-from "../helpers/generateId.js";
+import { getProducts, saveProducts } from "../services/productService.js";
+import {generateId} from "../helpers/generateId.js";
 
 
 export function setupAddProduct(loadProducts) {

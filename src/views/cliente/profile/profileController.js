@@ -9,26 +9,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function loadUserData() {
 
-    // OBTENER USUARIO ACTIVO
-    const activeUser =
+    const user =
         JSON.parse(
-            localStorage.getItem("activeUser")
+            localStorage.getItem(
+                "usuarioActivo"
+            )
         );
 
 
-    // VALIDAR SESIÓN
-    if (!activeUser) {
-
-        alert("You must log in");
+    if (!user) {
 
         window.location.href =
-            "../../auth/login/login.html";
+            "../../../../views/auth/login/login.html";
 
         return;
+
     }
 
 
-    // ELEMENTOS HTML
     const name =
         document.querySelector(".profile__name");
 
@@ -39,11 +37,10 @@ function loadUserData() {
         document.querySelector(".profile__usuario");
 
 
-    // MOSTRAR DATOS
     if (name) {
 
         name.textContent =
-            activeUser.name;
+            user.name;
 
     }
 
@@ -51,7 +48,7 @@ function loadUserData() {
     if (email) {
 
         email.textContent =
-            activeUser.email;
+            user.email;
 
     }
 
@@ -59,8 +56,7 @@ function loadUserData() {
     if (initial) {
 
         initial.textContent =
-            activeUser.name
-            .charAt(0)
+            user.name.charAt(0)
             .toUpperCase();
 
     }
@@ -71,7 +67,9 @@ function loadUserData() {
 function setupLogout() {
 
     const logoutBtn =
-        document.querySelector("#logoutBtn");
+        document.querySelector(
+            "#logoutBtn"
+        );
 
 
     if (!logoutBtn) return;
@@ -79,18 +77,13 @@ function setupLogout() {
 
     logoutBtn.addEventListener("click", () => {
 
-        // ELIMINAR SESIÓN
         localStorage.removeItem(
-            "activeUser"
+            "usuarioActivo"
         );
 
 
-        alert("Session closed");
-
-
-        // REDIRECCIONAR
         window.location.href =
-            "../../auth/login/login.html";
+            "../../../../views/auth/login/login.html";
 
     });
 

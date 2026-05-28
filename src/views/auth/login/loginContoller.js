@@ -100,7 +100,7 @@ function setupLogin() {
             case "admin":
 
                 window.location.href =
-                "../../manager/homePages/homePages,html";
+                "../../manager/homePage/homePage.html";
 
                 break;
 
