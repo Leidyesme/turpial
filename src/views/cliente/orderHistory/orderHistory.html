@@ -9,23 +9,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Historial de Pedidos</h1>
         <div class="order-history">
-            <div class="order-history__item section">
-                <h2 class="order-history__title">Pedido #12345</h2>
-                <img src="../../../../public/breakfast/breakfast4.png" alt="Order Image" class="order-history__image">
-                <p class="order-history__date">Fecha: 2024-06-01</p>
-                <p class="order-history__total">Total: $20.000</p>
-                <p class="order-history__status">Estado: Entregado</p>
+            <h1 class="order-history__main-title">Historial de pedidos</h1>
+
+            <!-- PEDIDOS DINÁMICOS -->
+            <div id="ordersContainer">
+
             </div>
-            <div class="order-history__item section">
-                <h2 class="order-history__title">Pedido #12346</h2>
-                <img src="../../../../public/drinks/drinks2.png" alt="Order Image" class="order-history__image">
-                <p class="order-history__date">Fecha: 2024-06-05</p>
-                <p class="order-history__total">Total: $15.000</p>
-                <p class="order-history__status">Estado: En proceso</p>
-            </div>
-            <button class="btn btn--marron">Atras</button>
+            <button id="backButton"class="btn btn--marron">Atrás</button>
         </div>
+    </div>
+    <script src="../../../../js/auth/authGuard.js"></script>
+    <script src="./orderHistoryController.js"></script>
 </body>
 </html>

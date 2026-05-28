@@ -2,73 +2,171 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadUserData();
 
-    setupSaveProfile();
+    setupEditProfile();
 
 });
 
 
-// CARGAR DATOS DEL USUARIO
 function loadUserData() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user) return;
-
-    document.getElementById("name").value = user.name || "";
-
-    document.getElementById("email").value = user.email || "";
-
-    document.getElementById("phone").value = user.phone || "";
-}
-
-
-// GUARDAR CAMBIOS
-function setupSaveProfile() {
-
-    const saveBtn = document.getElementById("saveProfileBtn");
-
-    if (!saveBtn) return;
-
-    saveBtn.addEventListener("click", (e) => {
-
-        e.preventDefault();
-
-        const name = document.getElementById("name").value.trim();
-
-        const email = document.getElementById("email").value.trim();
-
-        const phone = document.getElementById("phone").value.trim();
-
-
-        // VALIDACIONES
-        if (!name || !email || !phone) {
-
-            alert("Todos los campos son obligatorios");
-
-            return;
-        }
-
-
-        // OBJETO USUARIO
-        const updatedUser = {
-            name,
-            email,
-            phone
-        };
-
-
-        // GUARDAR EN LOCALSTORAGE
-        localStorage.setItem(
-            "user",
-            JSON.stringify(updatedUser)
+    // OBTENER USUARIO ACTIVO
+    const activeUser =
+        JSON.parse(
+            localStorage.getItem("activeUser")
         );
 
 
-        alert("Perfil actualizado correctamente");
+    // VALIDAR SESIÓN
+    if (!activeUser) {
+
+        alert("You must log in");
+
+        window.location.href =
+            "../../auth/login/login.html";
+
+        return;
+
+    }
 
 
-        // REDIRIGIR AL PERFIL
-        window.location.href = "../profile/profile.html";
+    // INPUTS
+    const nameInput =
+        document.querySelector("#name");
+
+    const emailInput =
+        document.querySelector("#email");
+
+    const phoneInput =
+        document.querySelector("#phone");
+
+
+    // CARGAR DATOS
+    if (nameInput) {
+
+        nameInput.value =
+            activeUser.name;
+
+    }
+
+
+    if (emailInput) {
+
+        emailInput.value =
+            activeUser.email;
+
+    }
+
+
+    if (phoneInput) {
+
+        phoneInput.value =
+            activeUser.phone;
+
+    }
+
+}
+
+
+function setupEditProfile() {
+
+    const form =
+        document.querySelector(".editprofile__form");
+
+
+    if (!form) return;
+
+
+    form.addEventListener("submit", (e) => {
+
+        e.preventDefault();
+
+
+        // OBTENER USUARIO ACTIVO
+        let activeUser =
+            JSON.parse(
+                localStorage.getItem("activeUser")
+            );
+
+
+        // OBTENER USERS
+        let users =
+            JSON.parse(
+                localStorage.getItem("users")
+            )
+            || [];
+
+
+        // NUEVOS DATOS
+        const updatedName =
+            document.querySelector("#name").value;
+
+        const updatedEmail =
+            document.querySelector("#email").value;
+
+        const updatedPhone =
+            document.querySelector("#phone").value;
+
+
+        // VALIDACIONES
+        if (
+            updatedName === "" ||
+            updatedEmail === "" ||
+            updatedPhone === ""
+        ) {
+
+            alert("Complete all fields");
+
+            return;
+
+        }
+
+
+        // ACTUALIZAR ACTIVE USER
+        activeUser.name =
+            updatedName;
+
+        activeUser.email =
+            updatedEmail;
+
+        activeUser.phone =
+            updatedPhone;
+
+
+        // ACTUALIZAR USERS ARRAY
+        users = users.map((user) => {
+
+            if (
+                user.email === activeUser.email
+            ) {
+
+                return activeUser;
+
+            }
+
+            return user;
+
+        });
+
+
+        // GUARDAR
+        localStorage.setItem(
+            "activeUser",
+            JSON.stringify(activeUser)
+        );
+
+
+        localStorage.setItem(
+            "users",
+            JSON.stringify(users)
+        );
+
+
+        alert("Profile updated successfully");
+
+
+        // REDIRECCIONAR
+        window.location.href =
+            "../profile/profile.html";
 
     });
 

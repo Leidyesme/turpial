@@ -1,5 +1,3 @@
-localStorage.setItem("user", JSON.stringify(user));
-
 document.addEventListener("DOMContentLoaded", () => {
 
     loadUserData();
@@ -8,44 +6,92 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
 function loadUserData() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    // OBTENER USUARIO ACTIVO
+    const activeUser =
+        JSON.parse(
+            localStorage.getItem("activeUser")
+        );
 
-    if (!user) return;
 
-    const name = document.querySelector(".profile__name");
-    const email = document.querySelector(".profile__email");
-    const initial = document.querySelector(".profile__usuario");
+    // VALIDAR SESIÓN
+    if (!activeUser) {
 
-    if (name) {
-        name.textContent = user.name;
+        alert("You must log in");
+
+        window.location.href =
+            "../../auth/login/login.html";
+
+        return;
     }
+
+
+    // ELEMENTOS HTML
+    const name =
+        document.querySelector(".profile__name");
+
+    const email =
+        document.querySelector(".profile__email");
+
+    const initial =
+        document.querySelector(".profile__usuario");
+
+
+    // MOSTRAR DATOS
+    if (name) {
+
+        name.textContent =
+            activeUser.name;
+
+    }
+
 
     if (email) {
-        email.textContent = user.email;
+
+        email.textContent =
+            activeUser.email;
+
     }
 
+
     if (initial) {
-        initial.textContent = user.name.charAt(0).toUpperCase();
+
+        initial.textContent =
+            activeUser.name
+            .charAt(0)
+            .toUpperCase();
+
     }
+
 }
+
 
 function setupLogout() {
 
-    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutBtn =
+        document.querySelector("#logoutBtn");
+
 
     if (!logoutBtn) return;
 
+
     logoutBtn.addEventListener("click", () => {
 
-        localStorage.removeItem("user");
+        // ELIMINAR SESIÓN
+        localStorage.removeItem(
+            "activeUser"
+        );
 
-        localStorage.removeItem("token");
 
-        localStorage.removeItem("cart");
+        alert("Session closed");
 
-        window.location.href = "../../auth/login/login.html";
+
+        // REDIRECCIONAR
+        window.location.href =
+            "../../auth/login/login.html";
 
     });
+
 }

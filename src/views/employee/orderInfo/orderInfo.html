@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Order Info</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
 </head>
 <body>
-    
+    <div class="container">
+        <div class="orderinfo">
+            <h1 class="orderinfo__title">Información del Pedido</h1>
+            <div class="orderinfo__container section">
+                <h2 class="orderinfo__number" id="orderNumber">Pedido #1</h2>
+                <p class="orderinfo__date" id="orderDate">Fecha:</p>
+                <p class="orderinfo__status" id="orderStatus">Estado:</p>
+                <p class="orderinfo__total" id="orderTotal">Total:</p>
+                <h3 class="orderinfo__subtitle">Productos</h3>
+                <div class="orderinfo__products" id="orderProducts">
+                    <!-- Aquí se mostrarán los productos del pedido -->
+                </div>
+                <button class="btn btn--verde" id="updateStatusBtn"> Actualizar Estado</button>
+                <button class="btn btn--marron" id="backBtn">Volver</button>
+            </div>
+        </div>
+    </div>
+    <script src="./orderInfoController.js"></script>
 </body>
 </html>

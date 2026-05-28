@@ -12,36 +12,34 @@
         <div class="newOrder">
             <h1 class="newOrder__title">Nuevo Pedido</h1>
             <form class="newOrder__form">
-                <input type="text" class="newOrder__input input" placeholder="Nombre del cliente">
+                <input type="text" class="newOrder__input input" id="customerName" placeholder="Nombre del cliente">
                 <div class="newOrder__check">
-                    <input type="checkbox" class="newOrder__checkbox input">
-                    <p class="newOrder__type">Para consumir aquí</p>
+                    <input type="radio" name="orderType" value="Consumir aquí" class="newOrder__checkbox input"> 
+                    <p class="newOrder__type"> Para consumir aquí</p>
                 </div>
                 <div class="newOrder__check">
-                    <input type="checkbox" class="newOrder__checkbox input">
+                    <input type="radio" name="orderType" value="Domicilio" class="newOrder__checkbox input">
                     <p class="newOrder__type">Para domicilio</p>
                 </div>
                 <div class="newOrder__check">
-                    <input type="checkbox" class="newOrder__checkbox input">
+                    <input type="radio" name="orderType" value="Llevar" class="newOrder__checkbox input">
                     <p class="newOrder__type">Para llevar</p>
                 </div>
                 <div class="newOrder__description">
                     <p class="newOrder__description-title">Descripción del pedido:</p>
-                    <div class="newOrder__description-content">
-                        <img src="../../../../public/breakfast/breakfast3.png" alt="desayuno3" class="newOrder__img">
-                        <p class="newOrder__description-text">Sandwich de jamón y queso en pan integral</p>
-                        <p class="newOrder__price">$8.000</p>
-                        <!-- falta el de agregar cantidad -->
+                    <div class="newOrder__description-content" id="productsContainer">
+                        
                     </div>
-                    <p class="newOrder__add">Agregar producto</p>
-                    <input type="text" class="newOrder__input input" placeholder="Observaciones">
-                    <p class="newOrder__total">Total: $8.000</p>
+                    <button type="button" class="btn--marron btn" id="addProductBtn">Agregar producto</button>
+                    <input type="text" class="newOrder__input input" id="orderObservation" placeholder="Observaciones">
+                    <p class="newOrder__total" id="orderTotal">Total: $8.000</p>
                 </div>
                 
-                <button class="btn--rojo btn">Cancelar</button>
-                <button class="btn--verde btn">Registrar</button>
+                <button class="btn--rojo btn" id="cancelBtn">Cancelar</button>
+                <button type="submit" class="btn--verde btn" id="registerBtn">Registrar</button>
             </form>
         </div>
     </div>
+    <script src="./newOrderController.js"></script>
 </body>
 </html>

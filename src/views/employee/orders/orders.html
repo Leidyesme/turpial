@@ -13,23 +13,15 @@
             <h1 class="orders__title">Pedidos</h1>
             <div class="orders__container">
                 <a href="#" class="orders__serch"><i class="fa-solid fa-magnifying-glass"></i></a>
-                <input type="text" class="orders__text input" placeholder="Buscar pedido por nombre">
+                <input type="text" class="orders__text input" id="searchOrder" placeholder="Buscar pedido por nombre">
                 <a href="#" class="orders__filter"><i class="fa-solid fa-sliders"></i></a>
             </div>
-            <div class="orders__list">
-                <div class="orders__item">
-                    <h2 class="orders__item-title">Pedido Laura Gomez</h2>
-                    <p class="orders__description">Descripción del pedido...</p>
-                    <a href="#" class="orders__link">Ver detalles</a>
-                </div>
-                <div class="orders__item">
-                    <h2 class="orders__item-title">Pedido Carlos Martinez</h2>
-                    <p class="orders__description">Descripción del pedido...</p>
-                    <a href="#" class="orders__link">Ver detalles</a>
-                </div>
+            <div class="orders__list" id="orderslist">
+                
             </div>
             <a href="../newOrder/newOrder.html" class="orders__add"><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
+    <script src="./ordersController.js"></script>
 </body>
 </html>
