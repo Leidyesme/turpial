@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="../../../../style/main.css">
 </head>
 <body>
-    
+    <div class="container">
+        <div class="products">
+            <!-- HEADER -->
+            <div class="products__header">
+                <h1 class="products__title">Gestión de Productos</h1>
+                <button class="btn btn--verde" id="addProductBtn">Agregar Producto</button>
+            </div>
+            <!-- SEARCH -->
+            <div class="products__search">
+                <input type="text" class="products__input input" id="searchInput" placeholder="Buscar producto">
+            </div>
+            <!-- PRODUCTS -->
+            <div class="products__container" id="productsContainer">
+
+            </div>
+        </div>
+    </div>
+    <script src="../../../../js/auth/authGuardAdmin.js"></script>
+    <script type="module" src="./productsController.js"></script>
 </body>
 </html>

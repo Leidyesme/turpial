@@ -7,6 +7,41 @@
     <link rel="stylesheet" href="../../../../style/main.css">
 </head>
 <body>
-    
+    <div class="container">
+        <div class="employees">
+            <div class="employees__header">
+                <h1 class="employees__title">
+                    Gestión de Empleados
+                </h1>
+            </div>
+            <form
+                id="employeeForm"
+                class="employees__form section">
+                <input
+                    type="text"
+                    id="employeeName"
+                    class="input"
+                    placeholder="Nombre empleado"
+                    required>
+                <input
+                    type="email"
+                    id="employeeEmail"
+                    class="input"
+                    placeholder="Correo"
+                    required>
+                <input
+                    type="text"
+                    id="employeeRole"
+                    class="input"
+                    placeholder="Cargo"
+                    required>
+                <button type="submit" class="btn btn--verde">Agregar empleado</button>
+            </form>
+            <div id="employeesContainer" class="employees__container">
+            
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./employeesController.js"></script>
 </body>
 </html>
