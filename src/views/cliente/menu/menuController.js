@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function validateSession() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("usuarioActivo"));
 
     if (!user) {
-        window.location.href = "../../../auth/login.html";
+        window.location.href = "../../../auth/login/login.html";
     }
 }
 
 function loadUserInitial() {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("usuarioActivo"));
 
     const userButton = document.querySelector(".categories__usuario");
 

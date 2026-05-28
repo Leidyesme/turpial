@@ -1,8 +1,4 @@
-import {
-    getCategories,
-    saveCategories
-}
-from "../services/categoryService.js";
+import {getCategories, saveCategories} from "../services/categoryService.js";
 
 
 import {

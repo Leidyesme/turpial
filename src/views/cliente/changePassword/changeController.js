@@ -20,14 +20,14 @@ function setupChangePassword() {
 
 
         // USUARIO ACTIVO
-        let activeUser =
+        let usuarioActivo =
             JSON.parse(
                 localStorage.getItem("activeUser")
             );
 
 
         // VALIDAR SESIÓN
-        if (!activeUser) {
+        if (!usuarioActivo) {
 
             alert("You must log in");
 
@@ -67,7 +67,7 @@ function setupChangePassword() {
         // VALIDAR PASSWORD ACTUAL
         if (
             currentPassword !==
-            activeUser.password
+            usuarioActivo.password
         ) {
 
             alert(
@@ -108,7 +108,7 @@ function setupChangePassword() {
 
 
         // ACTUALIZAR PASSWORD
-        activeUser.password =
+        usuarioActivo.password =
             newPassword;
 
 
@@ -117,10 +117,10 @@ function setupChangePassword() {
 
             if (
                 user.email ===
-                activeUser.email
+                usuarioActivo.email
             ) {
 
-                return activeUser;
+                return usuarioActivo;
 
             }
 
@@ -132,7 +132,7 @@ function setupChangePassword() {
         // GUARDAR
         localStorage.setItem(
             "activeUser",
-            JSON.stringify(activeUser)
+            JSON.stringify(usuarioActivo)
         );
 
 

@@ -1,29 +1,13 @@
-document.addEventListener("DOMContentLoaded", () => {
+const usuarioActivo =
+    JSON.parse(
+        localStorage.getItem(
+            "usuarioActivo"
+        )
+    );
 
-    checkAuthentication();
+if (!usuarioActivo) {
 
-});
-
-
-function checkAuthentication() {
-
-    // OBTENER USUARIO ACTIVO
-    const activeUser =
-        JSON.parse(
-            localStorage.getItem("activeUser")
-        );
-
-
-    // VALIDAR SESIÓN
-    if (!activeUser) {
-
-        alert("You must log in");
-
-
-        // REDIRECCIONAR LOGIN
-        window.location.href =
-            "../../auth/login/login.html";
-
-    }
+    window.location.href =
+        "../../../../views/auth/login/login.html";
 
 }

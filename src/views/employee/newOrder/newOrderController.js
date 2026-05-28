@@ -226,6 +226,8 @@ function registerOrder() {
 
     // PEDIDO
     const newOrder = {
+        
+        id: Date.now(),
 
         customer: customerName,
 
