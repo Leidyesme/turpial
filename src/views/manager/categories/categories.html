@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
 </head>
 <body>
-    
+    <div class="container">
+        <div class="categoriesAdmin">
+            <h1 class="categoriesAdmin__title"Gestión de Categorías></h1>
+            <form id="categoryForm" class="categoriesAdmin__form section">
+                <input type="text" id="categoryName" class="input" placeholder="Nombre categoría" required>
+                <button type="submit" class="btn btn--verde">Agregar categoría</button>
+            </form>
+            <div id="categoriesContainer" class="categoriesAdmin__container">
+
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./categoriesController.js"></script>
 </body>
 </html>
