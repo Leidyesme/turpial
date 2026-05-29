@@ -1,40 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
 
-    loadUserData();
+    () => {
 
-    setupLogout();
+        loadUserData();
 
-});
+        setupLogout();
+
+    }
+);
 
 
 function loadUserData() {
 
     const user =
+
         JSON.parse(
+
             localStorage.getItem(
                 "usuarioActivo"
             )
+
         );
 
 
-    if (!user) {
-
-        window.location.href =
-            "../../../../views/auth/login/login.html";
-
-        return;
-
-    }
+    if (!user) return;
 
 
     const name =
-        document.querySelector(".profile__name");
+        document.querySelector(
+            ".profile__name"
+        );
 
     const email =
-        document.querySelector(".profile__email");
+        document.querySelector(
+            ".profile__email"
+        );
 
     const initial =
-        document.querySelector(".profile__usuario");
+        document.querySelector(
+            ".profile__usuario"
+        );
 
 
     if (name) {
@@ -56,7 +62,9 @@ function loadUserData() {
     if (initial) {
 
         initial.textContent =
-            user.name.charAt(0)
+
+            user.name
+            .charAt(0)
             .toUpperCase();
 
     }
@@ -75,16 +83,20 @@ function setupLogout() {
     if (!logoutBtn) return;
 
 
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener(
+        "click",
 
-        localStorage.removeItem(
-            "usuarioActivo"
-        );
+        () => {
+
+            localStorage.removeItem(
+                "usuarioActivo"
+            );
 
 
-        window.location.href =
-            "../../../../views/auth/login/login.html";
+            window.location.href =
+                "../../auth/login/login.html";
 
-    });
+        }
+    );
 
 }

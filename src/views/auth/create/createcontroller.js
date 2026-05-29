@@ -41,11 +41,11 @@ function setupRegister() {
         // 3. CREAR EL OBJETO JSON CON LA ESTRUCTURA QUE RECIBIRÁ JAVA
         // Nota: Mapeamos los nombres idRol y estado de acuerdo a tu base de datos (Ej: id_rol 3 suele ser Cliente)
         const usuarioData = {
-            name: name,
-            correo: email,
-            telefono: phone,
-            contrasena: password,
-            idRol: 3,          // ROL-003 correspondiente a Cliente según tu script
+            name,
+            email,
+            phone,
+            password,
+            idRol: 3,          // ROL-003 correspondiente a Cliente
             estado: "Activo"   // Estado inicial por defecto de tu ENUM
         };
 

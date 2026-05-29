@@ -1,77 +1,76 @@
-document.addEventListener("DOMContentLoaded", () => {
+const changePasswordForm =
 
-    setupChangePassword();
-
-});
-
-
-function setupChangePassword() {
-
-    const form =
-        document.querySelector("#cambioForm");
+document.querySelector(
+    "#changePasswordForm"
+);
 
 
-    if (!form) return;
+console.log(changePasswordForm);
 
 
-    form.addEventListener("submit", (e) => {
+changePasswordForm.addEventListener(
+    "submit",
+
+    (e) => {
 
         e.preventDefault();
 
-
-        // USUARIO ACTIVO
-        let usuarioActivo =
-            JSON.parse(
-                localStorage.getItem("activeUser")
-            );
+        console.log("submit password");
 
 
-        // VALIDAR SESIÓN
-        if (!usuarioActivo) {
-
-            alert("You must log in");
-
-            window.location.href =
-                "../../auth/login/login.html";
-
-            return;
-
-        }
-
-
-        // USERS
-        let users =
-            JSON.parse(
-                localStorage.getItem("users")
-            )
-            || [];
-
-
-        // INPUTS
         const currentPassword =
+
             document.querySelector(
-                "#contraseñaActual"
+                "#currentPassword"
             ).value;
+
 
         const newPassword =
+
             document.querySelector(
-                "#nuevaContraseña"
+                "#newPassword"
             ).value;
+
 
         const confirmPassword =
+
             document.querySelector(
-                "#confirmarContraseña"
+                "#confirmPassword"
             ).value;
 
 
-        // VALIDAR PASSWORD ACTUAL
+        const usuarioActivo =
+
+            JSON.parse(
+
+                localStorage.getItem(
+                    "usuarioActivo"
+                )
+
+            );
+
+
+        let usuarios =
+
+            JSON.parse(
+
+                localStorage.getItem(
+                    "usuarios"
+                )
+
+            ) || [];
+
+
+        console.log(usuarioActivo);
+
+
         if (
-            currentPassword !==
-            usuarioActivo.password
+            usuarioActivo.password !==
+            currentPassword
         ) {
 
             alert(
-                "Current password is incorrect"
+                "Contraseña actual incorrecta"
             );
 
             return;
@@ -79,13 +78,13 @@ function setupChangePassword() {
         }
 
 
-        // VALIDAR NUEVA PASSWORD
         if (
-            newPassword.length < 6
+            newPassword !==
+            confirmPassword
         ) {
 
             alert(
-                "Password must have at least 6 characters"
+                "Las contraseñas no coinciden"
             );
 
             return;
@@ -93,64 +92,46 @@ function setupChangePassword() {
         }
 
 
-        // VALIDAR CONFIRMACIÓN
-        if (
-            newPassword !== confirmPassword
-        ) {
-
-            alert(
-                "Passwords do not match"
-            );
-
-            return;
-
-        }
-
-
-        // ACTUALIZAR PASSWORD
         usuarioActivo.password =
             newPassword;
 
 
-        // ACTUALIZAR USERS
-        users = users.map((user) => {
+        usuarios = usuarios.map(usuario =>
 
-            if (
-                user.email ===
-                usuarioActivo.email
-            ) {
+            usuario.email ===
+            usuarioActivo.email
 
-                return usuarioActivo;
+                ? usuarioActivo
 
-            }
-
-            return user;
-
-        });
-
-
-        // GUARDAR
-        localStorage.setItem(
-            "activeUser",
-            JSON.stringify(usuarioActivo)
+                : usuario
         );
 
 
         localStorage.setItem(
-            "users",
-            JSON.stringify(users)
+
+            "usuarios",
+
+            JSON.stringify(usuarios)
+
+        );
+
+
+        localStorage.setItem(
+
+            "usuarioActivo",
+
+            JSON.stringify(usuarioActivo)
+
         );
 
 
         alert(
-            "Password updated successfully"
+            "Contraseña actualizada"
         );
 
 
-        // REDIRECCIONAR
         window.location.href =
             "../profile/profile.html";
 
-    });
-
-}
+    }
+);
