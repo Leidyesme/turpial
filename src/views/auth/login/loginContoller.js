@@ -1,83 +1,51 @@
-const loginForm =
+//  Formulario login
+const loginForm = document.querySelector("#login__Form");
 
-document.querySelector(
-    "#login__Form"
-);
-
-
-loginForm.addEventListener(
-    "submit",
-
-    (e) => {
-
+//  Evento submit
+loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Se obtiene los datos del formulario
+        const email = document.querySelector("#email").value;
 
-        const email =
+        const password = document.querySelector("#password").value;
 
-            document.querySelector(
-                "#email"
-            ).value;
+        // Objeto usuario
+        const userData = {email, password};
 
+        try {
+            // Petición al backend
+            const response = await fetch("http://localhost:8080/TurpialJava/UserServlet?accion=login",
 
-        const password =
-
-            document.querySelector(
-                "#password"
-            ).value;
-
-
-        const usuarios =
-
-            JSON.parse(
-
-                localStorage.getItem(
-                    "usuarios"
-                )
-
-            ) || [];
-
-
-        const usuarioEncontrado =
-
-            usuarios.find(usuario =>
-
-                usuario.email === email &&
-
-                usuario.password === password
+                {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body:JSON.stringify(userData)
+                }
             );
 
+            // Se convierte la respuesta a JSON
+            const data = await response.json();
 
-        if (!usuarioEncontrado) {
+            console.log(data);
 
-            alert(
-                "Correo o contraseña incorrectos"
-            );
+            // Se verifica login
+            if (data.success) 
+                { 
+                    guardarHistorial( email, "Usuario", "Inició sesión" ); 
+                    alert( "Inicio de sesión exitoso" ); 
+                    //Redirección 
+                    window.location.href = "../../client/categories/categories.html"; }
 
-            return;
-
+            else {
+                alert("Correo o contraseña incorrectos");
+            }
         }
 
-
-        localStorage.setItem(
-
-            "usuarioActivo",
-
-            JSON.stringify(
-                usuarioEncontrado
-            )
-
-        );
-
-
-        alert(
-            "Inicio de sesión exitoso"
-        );
-
-
-        window.location.href =
-
-            "../../client/categories/categories.html";
-
+        catch (error) {
+            console.error(error);
+            alert("Error de conexión");
+        }
     }
 );
+
