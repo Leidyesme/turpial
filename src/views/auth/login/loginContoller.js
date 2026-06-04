@@ -1,124 +1,51 @@
-document.addEventListener("DOMContentLoaded", () => {
+//  Formulario login
+const loginForm = document.querySelector("#login__Form");
 
-    setupLogin();
-
-});
-
-
-function setupLogin() {
-
-    const loginForm =
-        document.querySelector("#login__Form");
-
-
-    if (!loginForm) return;
-
-
-    loginForm.addEventListener("submit", (e) => {
-
+//  Evento submit
+loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
+        // Se obtiene los datos del formulario
+        const email = document.querySelector("#email").value;
 
-        const email =
-            document.querySelector("#email")
-            .value
-            .trim();
+        const password = document.querySelector("#password").value;
 
-        const password =
-            document.querySelector("#contraseña")
-            .value
-            .trim();
+        // Objeto usuario
+        const userData = {email, password};
 
+        try {
+            // Petición al backend
+            const response = await fetch("http://localhost:8080/TurpialJava/UserServlet?accion=login",
 
-        // VALIDAR CAMPOS
-        if (!email || !password) {
-
-            alert("Todos los campos son obligatorios");
-
-            return;
-        }
-
-
-        // VALIDAR EMAIL
-        const emailRegex =
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (!emailRegex.test(email)) {
-
-            alert("Correo inválido");
-
-            return;
-        }
-
-
-        // OBTENER USUARIOS
-        const usuarios =
-            JSON.parse(localStorage.getItem("usuarios"))
-            || [];
-
-
-        // BUSCAR USUARIO
-        const usuarioEncontrado =
-            usuarios.find(usuario =>
-
-                usuario.email === email &&
-                usuario.password === password
+                {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body:JSON.stringify(userData)
+                }
             );
 
+            // Se convierte la respuesta a JSON
+            const data = await response.json();
 
-        // VALIDAR USUARIO
-        if (!usuarioEncontrado) {
+            console.log(data);
 
-            alert("Correo o contraseña incorrectos");
+            // Se verifica login
+            if (data.success) 
+                { 
+                    guardarHistorial( email, "Usuario", "Inició sesión" ); 
+                    alert( "Inicio de sesión exitoso" ); 
+                    //Redirección 
+                    window.location.href = "../../client/categories/categories.html"; }
 
-            return;
+            else {
+                alert("Correo o contraseña incorrectos");
+            }
         }
 
-
-        // GUARDAR SESIÓN
-        localStorage.setItem(
-            "usuarioActivo",
-            JSON.stringify(usuarioEncontrado)
-        );
-
-
-        alert("Bienvenido");
-
-
-        // REDIRECCIÓN SEGÚN ROL
-        switch (usuarioEncontrado.rol) {
-
-            case "cliente":
-
-                window.location.href =
-                "../../cliente/categories/categories.html";
-
-                break;
-
-
-            case "admin":
-
-                window.location.href =
-                "../../manager/homePage/homePage.html";
-
-                break;
-
-
-            case "empleado":
-
-                window.location.href =
-                "../../employee/orders/orders.html";
-
-                break;
-
-
-            default:
-
-                window.location.href =
-                "../../cliente/categories/categories.html";
+        catch (error) {
+            console.error(error);
+            alert("Error de conexión");
         }
+    }
+);
 
-    });
-
-}

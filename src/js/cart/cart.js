@@ -46,42 +46,40 @@ function setupAddToCart() {
 }
 
 
-function addProductToCart(product) {
-
-    // VALIDAR DISPONIBILIDAD
-    if (product.status === "Agotado") {
-
-        alert("Producto agotado");
-
-        return;
-    }
-
+export function addToCart(product) {
 
     // OBTENER CARRITO
-    let cart =
-        JSON.parse(localStorage.getItem("cart"))
-        || [];
-
+    const cart =
+        JSON.parse(
+            localStorage.getItem("cart")
+        ) || [];
 
     // BUSCAR PRODUCTO EXISTENTE
     const existingProduct =
-        cart.find(
-            item => item.name === product.name
-        );
+        cart.find(item =>
 
+            item.name === product.name
+        );
 
     // SI YA EXISTE
     if (existingProduct) {
 
-        existingProduct.quantity++;
-
-    } else {
-
-        // AGREGAR NUEVO
-        cart.push(product);
+        existingProduct.quantity += 1;
 
     }
 
+    else {
+
+        // AGREGAR NUEVO
+        cart.push({
+
+            ...product,
+
+            quantity: 1
+
+        });
+
+    }
 
     // GUARDAR
     localStorage.setItem(
@@ -90,6 +88,8 @@ function addProductToCart(product) {
     );
 
 
-    alert("Producto agregado al carrito");
+    alert(
+        "Producto agregado al carrito"
+    );
 
 }

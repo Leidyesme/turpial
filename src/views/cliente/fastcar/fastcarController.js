@@ -1,39 +1,41 @@
-document.addEventListener("DOMContentLoaded", () => {
+const cartContainer =
+    document.querySelector(
+        "#cartContainer"
+    );
 
-    renderCart();
 
-    setupCheckout();
+const cartTotal =
+    document.querySelector(
+        "#cartTotal"
+    );
 
-});
+
+const checkoutButton =
+    document.querySelector(
+        "#checkoutButton"
+    );
+
+
+let cart =
+    JSON.parse(
+        localStorage.getItem("cart")
+    ) || [];
+
+
+renderCart();
 
 
 function renderCart() {
 
-    const cartContainer =
-        document.querySelector("#cartContainer");
-
-    const cartTotal =
-        document.querySelector("#cartTotal");
+    cartContainer.innerHTML = "";
 
 
-    if (!cartContainer || !cartTotal) return;
-
-
-    // OBTENER CARRITO
-    const cart =
-        JSON.parse(localStorage.getItem("cart"))
-        || [];
-
-
-    // VALIDAR CARRITO VACÍO
     if (cart.length === 0) {
 
         cartContainer.innerHTML = `
 
-            <p class="fastcar__empty">
-
+            <p>
                 El carrito está vacío
-
             </p>
 
         `;
@@ -42,203 +44,147 @@ function renderCart() {
             "Total: $0";
 
         return;
+
     }
 
 
-    // LIMPIAR CONTENEDOR
-    cartContainer.innerHTML = "";
-
-
-    // TOTAL
     let total = 0;
 
 
-    // RECORRER PRODUCTOS
-    cart.forEach((product, index) => {
+    cart.forEach(product => {
 
         total +=
-            product.price * product.quantity;
+            product.price *
+            product.quantity;
 
 
-        const productCard =
-        document.createElement("div");
+        const card =
+            document.createElement("div");
 
 
-        productCard.classList.add(
+        card.classList.add(
             "fastcar__product"
         );
 
 
-        productCard.innerHTML = `
+        card.innerHTML = `
 
-            <img src="${product.image}" alt="${product.name}" class="fastcar__img">
+            <img
+                src="${product.image}"
 
-            <div class="fastcar__info">
+                class="fastcar__img">
 
-                <h3>${product.name}</h3>
 
-                <p>
-                    Precio:
-                    $${product.price}
-                </p>
+            <h3>
+                ${product.name}
+            </h3>
 
-                <p>
-                    Cantidad:
-                    ${product.quantity}
-                </p>
 
-                <button
-                    class="btn btn--rojo remove-btn"
-                    data-index="${index}">
+            <p>
+                $${product.price}
+            </p>
 
-                    Eliminar
 
-                </button>
-
-            </div>
+            <p>
+                Cantidad:
+                ${product.quantity}
+            </p>
 
         `;
 
 
-        cartContainer.appendChild(productCard);
+        cartContainer.appendChild(
+            card
+        );
 
     });
 
 
-    // MOSTRAR TOTAL
     cartTotal.textContent =
         `Total: $${total}`;
 
-
-    // CONFIGURAR BOTONES ELIMINAR
-    setupRemoveButtons();
-
 }
 
 
-function setupRemoveButtons() {
+checkoutButton.addEventListener(
+    "click",
 
-    const removeButtons =
-        document.querySelectorAll(".remove-btn");
+    () => {
 
-
-    removeButtons.forEach((button) => {
-
-        button.addEventListener("click", () => {
-
-            const index =
-                button.dataset.index;
-
-
-            let cart =
-                JSON.parse(
-                    localStorage.getItem("cart")
-                ) || [];
-
-
-            // ELIMINAR PRODUCTO
-            cart.splice(index, 1);
-
-
-            // GUARDAR
-            localStorage.setItem(
-                "cart",
-                JSON.stringify(cart)
-            );
-
-
-            // RECARGAR
-            renderCart();
-
-        });
-
-    });
-
-}
-
-
-function setupCheckout() {
-
-    const checkoutButton =
-        document.querySelector("#checkoutButton");
-
-
-    if (!checkoutButton) return;
-
-
-    checkoutButton.addEventListener("click", () => {
-
-        const cart =
-            JSON.parse(localStorage.getItem("cart"))
-            || [];
-
-
-        // VALIDAR CARRITO
         if (cart.length === 0) {
 
-            alert("El carrito está vacío");
+            alert(
+                "El carrito está vacío"
+            );
 
             return;
+
         }
 
 
-        // OBTENER PEDIDOS
         const orders =
-            JSON.parse(localStorage.getItem("orders"))
-            || [];
+            JSON.parse(
+                localStorage.getItem(
+                    "orders"
+                )
+            ) || [];
 
 
-        // CALCULAR TOTAL
         const total =
             cart.reduce(
+
                 (acc, item) =>
-                    acc + item.price * item.quantity,
+
+                    acc +
+                    item.price *
+                    item.quantity,
+
                 0
             );
 
 
-        // CREAR PEDIDO
         const newOrder = {
 
             id: Date.now(),
 
-            date:
-                new Date()
-                .toLocaleDateString(),
+            products: cart,
 
             total,
 
             status: "En proceso",
 
-            image: cart[0].image,
-
-            name: cart[0].name,
-
-            products: cart
+            date:
+                new Date()
+                .toLocaleDateString()
 
         };
 
 
-        // GUARDAR PEDIDO
-        orders.push(newOrder);
-
-
-        localStorage.setItem(
-            "orders",
-            JSON.stringify(orders)
+        orders.push(
+            newOrder
         );
 
 
-        // LIMPIAR CARRITO
-        localStorage.removeItem("cart");
+        localStorage.setItem(
+
+            "orders",
+
+            JSON.stringify(orders)
+
+        );
 
 
-        alert("Pedido realizado correctamente");
+        localStorage.removeItem(
+            "cart"
+        );
 
 
-        // RECARGAR
-        renderCart();
+        alert(
+            "Pedido realizado"
+        );
 
-    });
 
-}
+        location.reload();
+
+    }
+);

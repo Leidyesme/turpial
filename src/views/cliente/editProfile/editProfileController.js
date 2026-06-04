@@ -1,173 +1,150 @@
-document.addEventListener("DOMContentLoaded", () => {
+const editForm =
+document.querySelector(
+    "#editProfileForm"
+);
 
-    loadUserData();
+document.addEventListener(
+    "DOMContentLoaded",
 
-    setupEditProfile();
+    () => {
 
-});
+        loadUserData();
+
+    }
+);
 
 
 function loadUserData() {
 
-    // OBTENER USUARIO ACTIVO
-    const activeUser =
+    const usuarioActivo =
+
         JSON.parse(
-            localStorage.getItem("activeUser")
+
+            localStorage.getItem(
+                "usuarioActivo"
+            )
+
         );
 
 
-    // VALIDAR SESIÓN
-    if (!activeUser) {
-
-        alert("You must log in");
-
-        window.location.href =
-            "../../auth/login/login.html";
-
-        return;
-
-    }
+    console.log(usuarioActivo);
 
 
-    // INPUTS
-    const nameInput =
-        document.querySelector("#name");
-
-    const emailInput =
-        document.querySelector("#email");
-
-    const phoneInput =
-        document.querySelector("#phone");
+    if (!usuarioActivo) return;
 
 
-    // CARGAR DATOS
-    if (nameInput) {
+    document.querySelector("#name").value =
 
-        nameInput.value =
-            activeUser.name;
-
-    }
+        usuarioActivo.name || "";
 
 
-    if (emailInput) {
+    document.querySelector("#email").value =
 
-        emailInput.value =
-            activeUser.email;
-
-    }
+        usuarioActivo.email || "";
 
 
-    if (phoneInput) {
+    document.querySelector("#phone").value =
 
-        phoneInput.value =
-            activeUser.phone;
-
-    }
+        usuarioActivo.phone || "";
 
 }
 
 
-function setupEditProfile() {
+editForm.addEventListener(
+    "submit",
 
-    const form =
-        document.querySelector(".editprofile__form");
-
-
-    if (!form) return;
-
-
-    form.addEventListener("submit", (e) => {
+    (e) => {
 
         e.preventDefault();
 
+        console.log("submit edit profile");
 
-        // OBTENER USUARIO ACTIVO
-        let activeUser =
+
+        const usuarioActivo =
+
             JSON.parse(
-                localStorage.getItem("activeUser")
+
+                localStorage.getItem(
+                    "usuarioActivo"
+                )
+
             );
 
 
-        // OBTENER USERS
-        let users =
+        let usuarios =
+
             JSON.parse(
-                localStorage.getItem("users")
-            )
-            || [];
+
+                localStorage.getItem(
+                    "usuarios"
+                )
+
+            ) || [];
 
 
-        // NUEVOS DATOS
-        const updatedName =
-            document.querySelector("#name").value;
-
-        const updatedEmail =
-            document.querySelector("#email").value;
-
-        const updatedPhone =
-            document.querySelector("#phone").value;
+        const oldEmail =
+            usuarioActivo.email;
 
 
-        // VALIDACIONES
-        if (
-            updatedName === "" ||
-            updatedEmail === "" ||
-            updatedPhone === ""
-        ) {
+        usuarioActivo.name =
 
-            alert("Complete all fields");
-
-            return;
-
-        }
+            document.querySelector(
+                "#name"
+            ).value;
 
 
-        // ACTUALIZAR ACTIVE USER
-        activeUser.name =
-            updatedName;
+        usuarioActivo.email =
 
-        activeUser.email =
-            updatedEmail;
-
-        activeUser.phone =
-            updatedPhone;
+            document.querySelector(
+                "#email"
+            ).value;
 
 
-        // ACTUALIZAR USERS ARRAY
-        users = users.map((user) => {
+        usuarioActivo.phone =
 
-            if (
-                user.email === activeUser.email
-            ) {
-
-                return activeUser;
-
-            }
-
-            return user;
-
-        });
+            document.querySelector(
+                "#phone"
+            ).value;
 
 
-        // GUARDAR
+        usuarios = usuarios.map(usuario =>
+
+            usuario.email === oldEmail
+
+                ? usuarioActivo
+
+                : usuario
+        );
+
+
+        console.log(usuarios);
+
+
         localStorage.setItem(
-            "activeUser",
-            JSON.stringify(activeUser)
+
+            "usuarios",
+
+            JSON.stringify(usuarios)
+
         );
 
 
         localStorage.setItem(
-            "users",
-            JSON.stringify(users)
+
+            "usuarioActivo",
+
+            JSON.stringify(usuarioActivo)
+
         );
 
 
-        alert("Profile updated successfully");
+        alert(
+            "Perfil actualizado"
+        );
 
 
-        // REDIRECCIONAR
         window.location.href =
             "../profile/profile.html";
 
-    });
-
-}
+    }
+);

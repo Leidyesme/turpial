@@ -9,13 +9,13 @@ function setupRegister() {
     formulario.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        // 1. OBTENER DATOS (Usando los IDs correctos de tu HTML)
-        const name = document.querySelector("#nombre").value.trim();
-        const email = document.querySelector("#correo").value.trim();
-        const phone = document.querySelector("#telefono").value.trim();
-        const password = document.querySelector("#contraseña").value.trim();
+        // OBTENER DATOS 
+        const name = document.querySelector("#name").value.trim();
+        const email = document.querySelector("#email").value.trim();
+        const phone = document.querySelector("#phone").value.trim();
+        const password = document.querySelector("#password").value.trim();
 
-        // 2. VALIDACIONES DE CAMPOS
+        // VALIDACIONES DE CAMPOS
         if (!name || !email || !phone || !password) {
             alert("Todos los campos son obligatorios");
             return;
@@ -38,24 +38,20 @@ function setupRegister() {
             return;
         }
 
-        // 3. CREAR EL OBJETO JSON CON LA ESTRUCTURA QUE RECIBIRÁ JAVA
-        // Nota: Mapeamos los nombres idRol y estado de acuerdo a tu base de datos (Ej: id_rol 3 suele ser Cliente)
+        //  CREAR EL OBJETO JSON CON LA ESTRUCTURA QUE RECIBIRÁ JAVA
         const usuarioData = {
-            name: name,
-            correo: email,
-            telefono: phone,
-            contrasena: password,
-            idRol: 3,          // ROL-003 correspondiente a Cliente según tu script
+            name,
+            email,
+            phone,
+            password,
+            idRol: 3,          // ROL-003 correspondiente a Cliente
             estado: "Activo"   // Estado inicial por defecto de tu ENUM
         };
 
-        // 4. ENVIAR LA PETICIÓN HTTP AL BACKEND (Tomcat)
-        // Reemplaza 'PruebaServlet' por la URL real de tu servlet si cambia
-        fetch("http://localhost:8080/turpialJava/PruebaServlet?accion=registrar", {
+        // ENVIAR LA PETICIÓN HTTP AL BACKEND (Tomcat)
+        fetch("http://localhost:8080/turpialJava/PruebaServlet?accion=create", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json"},
             body: JSON.stringify(usuarioData)
         })
         .then(response => {
@@ -65,6 +61,9 @@ function setupRegister() {
             return response.json(); // Esperamos una respuesta JSON del servlet
         })
         .then(data => {
+
+            console.log(data);
+            
             // Evaluamos la respuesta enviada por Java
             if (data.status === "success") {
                 alert("¡Usuario registrado correctamente en la Base de Datos!");
