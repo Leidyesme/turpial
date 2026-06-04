@@ -1,150 +1,131 @@
-const editForm =
-document.querySelector(
-    "#editProfileForm"
-);
-
-document.addEventListener(
-    "DOMContentLoaded",
-
-    () => {
-
-        loadUserData();
-
+// Controlador para la vista de edición de perfil del cliente
+document.addEventListener("DOMContentLoaded",() => {
+        cargarDatosUsuario();
+        setupUpdateProfile();
     }
 );
 
+// Metodo que carga los datos del usuario activo en el formulario para su edición
+function cargarDatosUsuario() {
 
-function loadUserData() {
+    // Obtenemos usuario activo
+    const usuarioActivo = JSON.parse(
 
-    const usuarioActivo =
+        localStorage.getItem("usuarioActivo")
+    );
 
-        JSON.parse(
+    // Validamos existencia
+    if (!usuarioActivo) {
 
-            localStorage.getItem(
-                "usuarioActivo"
-            )
+        alert("Debes iniciar sesión");
 
-        );
+        window.location.href ="../../auth/login/login.html";
 
+        return;
+    }
 
-    console.log(usuarioActivo);
-
-
-    if (!usuarioActivo) return;
-
-
-    document.querySelector("#name").value =
-
-        usuarioActivo.name || "";
-
-
-    document.querySelector("#email").value =
-
-        usuarioActivo.email || "";
-
-
-    document.querySelector("#phone").value =
-
-        usuarioActivo.phone || "";
-
+    // Cargamos datos en el formulario
+    document.querySelector("#name").value = usuarioActivo.name;
+    document.querySelector("#email").value = usuarioActivo.email;
+    document.querySelector("#phone").value = usuarioActivo.phone;
 }
 
+// Metodo que configura el submit del formulario para actualizar los datos del usuario
+function setupUpdateProfile() {
 
-editForm.addEventListener(
-    "submit",
+    const formulario =document.querySelector("#editProfileForm");
 
-    (e) => {
+    if (!formulario) return;
 
-        e.preventDefault();
+    formulario.addEventListener("submit",(e) => {
+            e.preventDefault();
 
-        console.log("submit edit profile");
+            //Se recupera el usuario activo de localStorage para obtener su idUsuario
+            const usuarioActivo =JSON.parse(localStorage.getItem("usuarioActivo"));
 
+            //se capturan los datos del formulario
+            const name =document.querySelector("#name").value.trim();
+            const email =document.querySelector("#email").value.trim();
+            const phone =document.querySelector("#phone").value.trim();
 
-        const usuarioActivo =
+            //validaciones básicas
+            if (
+                !name ||
+                !email ||
+                !phone
+            ) {
 
-            JSON.parse(
+                alert(
+                    "Todos los campos son obligatorios"
+                );
+                return;
+            }
 
-                localStorage.getItem(
-                    "usuarioActivo"
-                )
+            //Se crea el objeto json para enviar al backend.
+            const usuarioData = {
+                idUsuario: usuarioActivo.idUsuario,
+                name,
+                email,
+                phone
+            };
 
-            );
+            // peticion al fetch al servlet java para actualizar datos
+            fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=update",
 
+                {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(usuarioData)
+                }
+            )
 
-        let usuarios =
+            .then(response => {
 
-            JSON.parse(
+                if (!response.ok) {
+                    throw new Error("Error servidor");
+                }
 
-                localStorage.getItem(
-                    "usuarios"
-                )
+                return response.json();
+            })
 
-            ) || [];
+            .then(data => {
 
+                console.log(data);
 
-        const oldEmail =
-            usuarioActivo.email;
+                //Se valida la respuesta del backend
+                if (
+                    data.status ==="success"
+                ) {
 
+                    //Actualizamos localStorage con los nuevos datos
+                    usuarioActivo.name =name;
 
-        usuarioActivo.name =
+                    usuarioActivo.email =email;
 
-            document.querySelector(
-                "#name"
-            ).value;
+                    usuarioActivo.phone =phone;
 
+                    localStorage.setItem("usuarioActivo",JSON.stringify(usuarioActivo));
 
-        usuarioActivo.email =
+                    alert("Perfil actualizado");
 
-            document.querySelector(
-                "#email"
-            ).value;
+                    // Redireccionamos nuevamente al perfil
 
+                    window.location.href ="../profile/profile.html";
+                }
 
-        usuarioActivo.phone =
+                else {
+                    alert(data.message);
+                }
+            })
 
-            document.querySelector(
-                "#phone"
-            ).value;
+            .catch(error => {
 
+                console.error(error);
 
-        usuarios = usuarios.map(usuario =>
-
-            usuario.email === oldEmail
-
-                ? usuarioActivo
-
-                : usuario
-        );
-
-
-        console.log(usuarios);
-
-
-        localStorage.setItem(
-
-            "usuarios",
-
-            JSON.stringify(usuarios)
-
-        );
-
-
-        localStorage.setItem(
-
-            "usuarioActivo",
-
-            JSON.stringify(usuarioActivo)
-
-        );
-
-
-        alert(
-            "Perfil actualizado"
-        );
-
-
-        window.location.href =
-            "../profile/profile.html";
-
-    }
-);
+                alert(
+                    "Error de conexión"
+                );
+            });
+        }
+    );
+}

@@ -1,13 +1,13 @@
 import {
     setupAddEmployee
 }
-from "../../js/admin/employees/controllers/createEmployee.js";
+from "../../../js/admin/employees/controllers/createEmployee.js";
 
 
 import {
     loadEmployees
 }
-from "../../js/admin/employees/controllers/readEmployees.js";
+from "../../../js/admin/employees/controllers/readEmployee.js";
 
 
 document.addEventListener(

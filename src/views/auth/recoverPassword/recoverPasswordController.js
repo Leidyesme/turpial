@@ -48,48 +48,41 @@ function setupRecoverPassword() {
         }
 
 
-        // OBTENER USUARIOS
-        const usuarios =
-            JSON.parse(localStorage.getItem("usuarios"))
-            || [];
+        // Consultar al backend si el correo existe
+        fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=existsEmail", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === "success" && data.exists) {
+                // GUARDAR EMAIL TEMPORAL
+                localStorage.setItem("recoveryEmail", email);
 
+                alert("Correo verificado correctamente");
 
-        // BUSCAR USUARIO
-        const usuarioExiste =
-            usuarios.find(
-                usuario => usuario.email === email
-            );
+                const recoveryCode = Math.floor(100000 + Math.random() * 900000);
 
+                localStorage.setItem("recoveryCode", recoveryCode);
 
-        // VALIDAR EXISTENCIA
-        if (!usuarioExiste) {
-
-            alert("El correo no está registrado");
-
-            return;
-        }
-
-
-        // GUARDAR EMAIL TEMPORAL
-        localStorage.setItem(
-            "recoveryEmail",
-            email
-        );
-
-
-        alert("Correo verificado correctamente");
-
-        const recoveryCode =
-        Math.floor(100000 + Math.random() * 900000);
-
-        localStorage.setItem(
-            "recoveryCode",
-            recoveryCode
-        );
-
-        // REDIRECCIONAR
-        window.location.href =
-            "../codepassword/codepassword.html";
+                // REDIRECCIONAR
+                window.location.href = "../codepassword/codepassword.html";
+            } else {
+                alert("El correo no está registrado");
+            }
+        })
+        .catch(error => {
+            console.error("Error al verificar correo:", error);
+            alert("No se pudo conectar con el servidor de El Turpial.");
+        });
 
     });
 

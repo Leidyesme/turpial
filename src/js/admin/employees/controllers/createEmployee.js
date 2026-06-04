@@ -22,7 +22,7 @@ export function setupAddEmployee(loadEmployees) {
     form.addEventListener(
         "submit",
 
-        (e) => {
+        async (e) => {
 
             e.preventDefault();
 
@@ -45,42 +45,37 @@ export function setupAddEmployee(loadEmployees) {
                 ).value;
 
 
-            const employees =
-                getEmployees();
-
-
-            const newEmployee = {
-
-                id:
-                    generateEmployeeId(),
-
+            const payload = {
                 name,
-
                 email,
-
-                role,
-
-                status:
-                    "Activo"
-
+                role
             };
 
+            try {
+                const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=createEmployee", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            employees.push(
-                newEmployee
-            );
+                if (!response.ok) {
+                    throw new Error("Error en la respuesta del servidor");
+                }
 
-
-            saveEmployees(
-                employees
-            );
-
-
-            form.reset();
-
-
-            loadEmployees();
-
+                const data = await response.json();
+                if (data.status === "success") {
+                    alert("Empleado agregado correctamente");
+                    form.reset();
+                    loadEmployees();
+                } else {
+                    alert("Error al guardar: " + data.message);
+                }
+            } catch (error) {
+                console.error("Error al crear empleado:", error);
+                alert("No se pudo conectar con el servidor.");
+            }
         }
     );
 

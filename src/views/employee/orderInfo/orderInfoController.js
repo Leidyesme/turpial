@@ -59,6 +59,9 @@ function loadOrderInfo() {
     const orderStatus =
         document.querySelector("#orderStatus");
 
+    const orderAddress =
+        document.querySelector("#orderAddress");
+
     const orderTotal =
         document.querySelector("#orderTotal");
 
@@ -68,13 +71,18 @@ function loadOrderInfo() {
 
     // RENDER INFO
     orderNumber.textContent =
-        `Pedido #${parseInt(currentIndex) + 1}`;
+        `${currentOrder.clientName || currentOrder.customer || 'Cliente Anónimo'}`;
 
     orderDate.textContent =
         `Fecha: ${currentOrder.date}`;
 
     orderStatus.textContent =
         `Estado: ${currentOrder.status}`;
+
+    if (orderAddress) {
+        orderAddress.textContent =
+            `Dirección: ${currentOrder.address || 'No especificada'}`;
+    }
 
     orderTotal.textContent =
         `Total: $${currentOrder.total}`;
@@ -127,6 +135,13 @@ function loadOrderInfo() {
 
     });
 
+
+    // Establecer el valor seleccionado en el select dropdown
+    const statusSelect = document.querySelector("#statusSelect");
+    if (statusSelect) {
+        statusSelect.value = currentOrder.status;
+    }
+
 }
 
 
@@ -163,6 +178,9 @@ function setupButtons() {
 
 function updateOrderStatus() {
 
+    const statusSelect = document.querySelector("#statusSelect");
+    if (!statusSelect) return;
+
     const orders =
         JSON.parse(
             localStorage.getItem("orders")
@@ -170,36 +188,8 @@ function updateOrderStatus() {
         || [];
 
 
-    // CAMBIO SIMPLE ESTADOS
-    if (
-        currentOrder.status ===
-        "En proceso"
-    ) {
-
-        currentOrder.status =
-            "Preparando";
-
-    }
-
-    else if (
-        currentOrder.status ===
-        "Preparando"
-    ) {
-
-        currentOrder.status =
-            "Entregado";
-
-    }
-
-    else {
-
-        alert(
-            "El pedido ya fue entregado"
-        );
-
-        return;
-
-    }
+    // Asignar el estado seleccionado
+    currentOrder.status = statusSelect.value;
 
 
     // ACTUALIZAR ARRAY

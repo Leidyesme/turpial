@@ -56,10 +56,13 @@ export function updateProduct(id) {
         newName;
 
     product.price =
-        newPrice;
+        Number(newPrice);
 
     product.stock =
-        newStock;
+        Number(newStock);
+
+    product.status =
+        Number(newStock) > 0 ? "Disponible" : "Agotado";
 
     product.category =
         newCategory;

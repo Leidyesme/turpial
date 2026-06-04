@@ -5,7 +5,7 @@ import {
 from "../services/orderService.js";
 
 
-export function deleteOrder(id) {
+export function deleteOrder(index) {
 
     const confirmDelete =
         confirm(
@@ -16,15 +16,11 @@ export function deleteOrder(id) {
     if (!confirmDelete) return;
 
 
-    let orders =
+    const orders =
         getOrders();
 
 
-    orders =
-        orders.filter(order =>
-
-            order.id !== id
-        );
+    orders.splice(index, 1);
 
 
     saveOrders(
