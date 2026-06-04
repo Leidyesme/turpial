@@ -1,7 +1,7 @@
 import {
     loadOrders
 }
-from "../../js/admin/orders/controllers/readOrders.js";
+from "../../../js/admin/orders/controllers/readOrders.js";
 
 
 document.addEventListener(

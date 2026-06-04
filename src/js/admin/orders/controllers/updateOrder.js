@@ -5,41 +5,16 @@ import {
 from "../services/orderService.js";
 
 
-export function updateOrder(id) {
+export function updateOrder(index, newStatus) {
 
     const orders =
         getOrders();
 
 
-    const order =
-        orders.find(order =>
-
-            order.id === id
-        );
+    if (!orders[index]) return;
 
 
-    if (!order) return;
-
-
-    const newStatus =
-        prompt(
-
-            `Nuevo estado:
-            
-            - Pendiente
-            - En proceso
-            - Entregado
-            - Cancelado`,
-
-            order.status
-
-        );
-
-
-    if (!newStatus) return;
-
-
-    order.status =
+    orders[index].status =
         newStatus;
 
 

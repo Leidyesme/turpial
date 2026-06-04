@@ -13,10 +13,11 @@ function setupRegister() {
         const name = document.querySelector("#name").value.trim();
         const email = document.querySelector("#email").value.trim();
         const phone = document.querySelector("#phone").value.trim();
+        const direccion = document.querySelector("#direccion").value.trim();
         const password = document.querySelector("#password").value.trim();
 
         // VALIDACIONES DE CAMPOS
-        if (!name || !email || !phone || !password) {
+        if (!name || !email || !phone || !direccion || !password) {
             alert("Todos los campos son obligatorios");
             return;
         }
@@ -44,12 +45,13 @@ function setupRegister() {
             email,
             phone,
             password,
+            direccion,
             idRol: 3,          // ROL-003 correspondiente a Cliente
             estado: "Activo"   // Estado inicial por defecto de tu ENUM
         };
 
         // ENVIAR LA PETICIÓN HTTP AL BACKEND (Tomcat)
-        fetch("http://localhost:8080/turpialJava/PruebaServlet?accion=create", {
+        fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=create", {
             method: "POST",
             headers: { "Content-Type": "application/json"},
             body: JSON.stringify(usuarioData)

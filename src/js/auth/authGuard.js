@@ -13,6 +13,6 @@ if (!usuarioActivo) {
 
     window.location.href =
 
-        "../../../../views/auth/login/login.html";
+        "../../../views/auth/login/login.html";
 
 }

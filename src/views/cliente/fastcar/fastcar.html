@@ -14,17 +14,46 @@
             <div class="fastcar__options section" id="cartContainer">
                 <!-- Productos del carrito -->
             </div>
-                <h2 class="fastcar__total" id="cartTotal">Total: $33.000</h2>
+            
+            <!-- DIRECCION DE ENTREGA -->
+            <div class="fastcar__address-section section">
+                <h3 class="fastcar__address-title">Dirección de Entrega</h3>
+                
+                <!-- Tarjeta de dirección registrada -->
+                <div class="address-card" id="savedAddressCard">
+                    <label class="address-card__label">
+                        <input type="radio" name="addressOption" id="useSavedAddress" checked>
+                        <span class="address-card__details">
+                            <strong>Dirección Registrada:</strong>
+                            <span id="savedAddressText">Cargando dirección...</span>
+                        </span>
+                    </label>
+                </div>
+                
+                <!-- Opción de nueva dirección -->
+                <div class="address-card">
+                    <label class="address-card__label">
+                        <input type="radio" name="addressOption" id="useNewAddress">
+                        <span class="address-card__details">
+                            <strong>Otra Dirección:</strong>
+                        </span>
+                    </label>
+                    <input type="text" class="input address-card__input" id="newAddressInput" placeholder="Escribe la nueva dirección..." disabled>
+                </div>
+            </div>
+
+            <h2 class="fastcar__total" id="cartTotal">Total: $33.000</h2>
                 <button class="btn btn--verde" id="checkoutButton">Realizar pedido</button>
             <div class="botones--links">
                 <a href="../categories/categories.html" class="profile__link link"><i class="fa-solid fa-house"></i></a>
-                <a href="../fastcar/fastcar.html" class="profile__link link" id="checkoutBotton"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="../fastCar/fastCar.html" class="profile__link link" id="checkoutBotton"><i class="fa-solid fa-cart-shopping"></i></a>
                 <a href="../profile/profile.html" class="profile__link link"><button class="profile__usuario usuario">L</button></a>
 
             </div>
         </div>
     </div>
-    <script src="../../../../js/auth/authGuard.js"></script>
+    <script src="../../../js/history/history.js"></script>
+    <script src="../../../js/auth/authGuard.js"></script>
     <script type="module" src="./fastCarController.js"></script>
 </body>
 </html>

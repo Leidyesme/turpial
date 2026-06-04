@@ -78,3 +78,124 @@
     background-color: var(--beige);
     border-radius: 15px;
 }
+
+/* Order Info Page */
+.orderinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    font-family: inherit;
+}
+
+.orderinfo__title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.orderinfo__container.section {
+    height: auto;
+    min-height: 350px;
+    width: 90%;
+    max-width: 400px;
+    gap: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.orderinfo__number {
+    font-size: 20px;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.orderinfo__date,
+.orderinfo__status,
+.orderinfo__address,
+.orderinfo__total {
+    font-size: 15px;
+    color: #444;
+    align-self: flex-start;
+    margin: 2px 0;
+    width: 100%;
+    text-align: left;
+}
+
+.orderinfo__total {
+    font-weight: bold;
+    font-size: 17px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
+.orderinfo__subtitle {
+    font-size: 16px;
+    align-self: flex-start;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    border-bottom: 2px solid var(--marron);
+    padding-bottom: 3px;
+    width: 100%;
+}
+
+.orderinfo__products {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px;
+}
+
+.orderinfo__product {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.orderinfo__product p {
+    margin: 0;
+}
+
+.orderinfo__status-update {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+.orderinfo__status-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+}
+
+.orderinfo__status-select {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid var(--marron);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    margin: 5px 0 10px 0;
+    cursor: pointer;
+}
+
+.orderinfo__status-select:focus {
+    outline: none;
+    border-color: var(--fondo);
+}

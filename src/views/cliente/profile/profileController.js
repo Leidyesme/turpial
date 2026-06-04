@@ -1,102 +1,169 @@
 document.addEventListener(
+
     "DOMContentLoaded",
 
     () => {
 
-        loadUserData();
-
+        cargarPerfil();
         setupLogout();
-
     }
 );
 
+/**
+ * Metodo que consulta
+ * los datos actualizados
+ * del usuario.
+ */
+function cargarPerfil() {
 
-function loadUserData() {
+    /**
+     * Recuperamos sesión.
+     */
 
-    const user =
+    const usuarioActivo =
 
         JSON.parse(
 
             localStorage.getItem(
                 "usuarioActivo"
             )
-
         );
 
+    /**
+     * Validar login.
+     */
 
-    if (!user) return;
+    if (!usuarioActivo) {
 
-
-    const name =
-        document.querySelector(
-            ".profile__name"
+        alert(
+            "Debes iniciar sesión"
         );
 
-    const email =
-        document.querySelector(
-            ".profile__email"
-        );
+        window.location.href =
 
-    const initial =
-        document.querySelector(
-            ".profile__usuario"
-        );
+            "../../auth/login/login.html";
 
-
-    if (name) {
-
-        name.textContent =
-            user.name;
-
+        return;
     }
 
+    /**
+     * JSON backend.
+     */
 
-    if (email) {
+    const data = {
 
-        email.textContent =
-            user.email;
+        idUsuario:
+            usuarioActivo.idUsuario
+    };
 
-    }
+    /**
+     * Fetch backend.
+     */
 
+    fetch(
 
-    if (initial) {
+        "http://localhost:8080/turpialJava/UsuarioServlet?accion=readUser",
 
-        initial.textContent =
+        {
 
-            user.name
-            .charAt(0)
-            .toUpperCase();
+            method: "POST",
 
-    }
+            headers: {
 
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify(data)
+        }
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Error servidor"
+            );
+        }
+
+        return response.json();
+    })
+
+    .then(data => {
+
+        console.log(data);
+
+        /**
+         * Validar respuesta.
+         */
+
+        if (
+
+            data.status ===
+            "success"
+
+        ) {
+
+            /**
+             * Mostrar datos
+             * en HTML.
+             */
+
+            document.querySelector(
+                "#profileName"
+            ).textContent =
+
+                data.name;
+
+            document.querySelector(
+                "#profileEmail"
+            ).textContent =
+
+                data.email;
+
+            document.querySelector(
+                "#profilePhone"
+            ).textContent =
+
+                data.phone;
+
+            document.querySelector(
+                "#profileEstado"
+            ).textContent =
+
+                data.estado;
+        }
+
+        else {
+
+            alert(
+                data.message
+            );
+        }
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Error conexión"
+        );
+    });
 }
 
-
 function setupLogout() {
-
-    const logoutBtn =
-        document.querySelector(
-            "#logoutBtn"
-        );
-
-
+    const logoutBtn = document.querySelector("#logoutBtn");
     if (!logoutBtn) return;
 
-
-    logoutBtn.addEventListener(
-        "click",
-
-        () => {
-
-            localStorage.removeItem(
-                "usuarioActivo"
-            );
-
-
-            window.location.href =
-                "../../auth/login/login.html";
-
+    logoutBtn.addEventListener("click", () => {
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+        if (usuarioActivo && typeof guardarHistorial === "function") {
+            guardarHistorial(usuarioActivo.email, "Usuario", "Cerró sesión");
         }
-    );
-
+        localStorage.removeItem("usuarioActivo");
+        alert("Sesión cerrada");
+        window.location.href = "../../auth/login/login.html";
+    });
 }

@@ -35,21 +35,24 @@ export function setupAddProduct(loadProducts) {
             prompt("Ruta imagen");
 
 
+        const priceNum = Number(price);
+        const stockNum = Number(stock);
+
         const newProduct = {
 
             id: generateId(),
 
             name,
 
-            price,
+            price: priceNum,
 
-            stock,
+            stock: stockNum,
 
             category,
 
             image,
 
-            status: "Disponible"
+            status: stockNum > 0 ? "Disponible" : "Agotado"
 
         };
 

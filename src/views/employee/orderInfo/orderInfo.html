@@ -14,10 +14,20 @@
                 <h2 class="orderinfo__number" id="orderNumber">Pedido #1</h2>
                 <p class="orderinfo__date" id="orderDate">Fecha:</p>
                 <p class="orderinfo__status" id="orderStatus">Estado:</p>
+                <p class="orderinfo__address" id="orderAddress">Dirección:</p>
                 <p class="orderinfo__total" id="orderTotal">Total:</p>
                 <h3 class="orderinfo__subtitle">Productos</h3>
                 <div class="orderinfo__products" id="orderProducts">
                     <!-- Aquí se mostrarán los productos del pedido -->
+                </div>
+                <div class="orderinfo__status-update">
+                    <label for="statusSelect" class="orderinfo__status-label">Cambiar Estado:</label>
+                    <select id="statusSelect" class="input orderinfo__status-select">
+                        <option value="En proceso">En proceso</option>
+                        <option value="Preparado">Preparado</option>
+                        <option value="Entregado">Entregado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
                 </div>
                 <button class="btn btn--verde" id="updateStatusBtn"> Actualizar Estado</button>
                 <button class="btn btn--marron" id="backBtn">Volver</button>

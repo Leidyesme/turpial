@@ -90,3 +90,17 @@
     padding: 10px;
     font-weight: bold;
 }
+
+.back { 
+    padding: 20px; 
+}
+
+.back__button { 
+    background-color: var(--marron);
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    transition: 0.3s; 
+} 

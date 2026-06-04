@@ -61,20 +61,27 @@ function loadOrders(filteredOrders = null) {
 
             <h2 class="orders__item-title">
 
-                Pedido #${index + 1}
+                ${order.clientName || order.customer || 'Cliente Anónimo'}
 
             </h2>
 
             <p class="orders__description">
 
-                Estado:
+                <strong>Dirección:</strong>
+                ${order.address || 'No especificada'}
+
+            </p>
+
+            <p class="orders__description">
+
+                <strong>Estado:</strong>
                 ${order.status}
 
             </p>
 
             <p class="orders__description">
 
-                Total:
+                <strong>Total:</strong>
                 $${order.total}
 
             </p>

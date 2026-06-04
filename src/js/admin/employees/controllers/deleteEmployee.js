@@ -1,11 +1,4 @@
-import {
-    getEmployees,
-    saveEmployees
-}
-from "../services/employeeService.js";
-
-
-export function deleteEmployee(id) {
+export async function deleteEmployee(id) {
 
     const confirmDelete =
         confirm(
@@ -15,23 +8,29 @@ export function deleteEmployee(id) {
 
     if (!confirmDelete) return;
 
+    try {
+        const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=deleteEmployee", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: id })
+        });
 
-    let employees =
-        getEmployees();
+        if (!response.ok) {
+            throw new Error("Error en la respuesta del servidor");
+        }
 
-
-    employees =
-        employees.filter(employee =>
-
-            employee.id !== id
-        );
-
-
-    saveEmployees(
-        employees
-    );
-
-
-    location.reload();
+        const data = await response.json();
+        if (data.status === "success") {
+            alert("Empleado eliminado correctamente");
+            location.reload();
+        } else {
+            alert("Error al eliminar: " + data.message);
+        }
+    } catch (error) {
+        console.error("Error al eliminar empleado:", error);
+        alert("No se pudo conectar con el servidor.");
+    }
 
 }

@@ -63,10 +63,14 @@ function renderProducts(products) {
         );
 
 
+        const imagePath = (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "")
+            ? product.image
+            : "../../../../public/turpial.png";
+
         card.innerHTML = `
 
             <img
-                src="${product.image}"
+                src="${imagePath}"
 
                 alt="${product.name}"
 
