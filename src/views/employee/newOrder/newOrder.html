@@ -13,17 +13,17 @@
             <h1 class="newOrder__title">Nuevo Pedido</h1>
             <form class="newOrder__form">
                 <input type="text" class="newOrder__input input" id="customerName" placeholder="Nombre del cliente">
-                <div class="newOrder__check">
-                    <input type="radio" name="orderType" value="Consumir aquí" class="newOrder__checkbox input"> 
-                    <p class="newOrder__type"> Para consumir aquí</p>
+                <select class="newOrder__input input" id="orderType">
+                    <option value="">Seleccione tipo de pedido</option>
+                    <option value="Para consumir aquí">Para consumir aquí</option>
+                    <option value="A domicilio">A domicilio</option>
+                    <option value="Para recoger">Para recoger</option>
+                </select>
+                <div id="mesaContainer" style="display: none;">
+                    <input type="number" class="newOrder__input input" id="numeroMesa" placeholder="Número de mesa">
                 </div>
-                <div class="newOrder__check">
-                    <input type="radio" name="orderType" value="Domicilio" class="newOrder__checkbox input">
-                    <p class="newOrder__type">Para domicilio</p>
-                </div>
-                <div class="newOrder__check">
-                    <input type="radio" name="orderType" value="Llevar" class="newOrder__checkbox input">
-                    <p class="newOrder__type">Para llevar</p>
+                <div id="direccionContainer" style="display: none;">
+                    <input type="text" class="newOrder__input input" id="direccionEntrega" placeholder="Dirección entrega">
                 </div>
                 <div class="newOrder__description">
                     <p class="newOrder__description-title">Descripción del pedido:</p>

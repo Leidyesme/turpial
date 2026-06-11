@@ -1,5 +1,17 @@
 export async function deleteEmployee(id) {
 
+const usuarioActivo = JSON.parse(
+
+    localStorage.getItem("usuarioActivo")
+
+);
+
+if (usuarioActivo.idUsuario === id) {
+
+    alert("No puedes eliminar tu propia cuenta");
+    return;
+}
+
     const confirmDelete =
         confirm(
             "¿Eliminar empleado?"

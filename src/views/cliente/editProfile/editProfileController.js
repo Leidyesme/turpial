@@ -28,6 +28,7 @@ function cargarDatosUsuario() {
     document.querySelector("#name").value = usuarioActivo.name;
     document.querySelector("#email").value = usuarioActivo.email;
     document.querySelector("#phone").value = usuarioActivo.phone;
+    document.querySelector("#direccion").value = usuarioActivo.direccion || "";
 }
 
 // Metodo que configura el submit del formulario para actualizar los datos del usuario
@@ -47,12 +48,14 @@ function setupUpdateProfile() {
             const name =document.querySelector("#name").value.trim();
             const email =document.querySelector("#email").value.trim();
             const phone =document.querySelector("#phone").value.trim();
+            const direccion =document.querySelector("#direccion").value.trim();
 
             //validaciones básicas
             if (
                 !name ||
                 !email ||
-                !phone
+                !phone ||
+                !direccion
             ) {
 
                 alert(
@@ -66,7 +69,8 @@ function setupUpdateProfile() {
                 idUsuario: usuarioActivo.idUsuario,
                 name,
                 email,
-                phone
+                phone,
+                direccion
             };
 
             // peticion al fetch al servlet java para actualizar datos
@@ -103,6 +107,8 @@ function setupUpdateProfile() {
                     usuarioActivo.email =email;
 
                     usuarioActivo.phone =phone;
+
+                    usuarioActivo.direccion =direccion;
 
                     localStorage.setItem("usuarioActivo",JSON.stringify(usuarioActivo));
 
