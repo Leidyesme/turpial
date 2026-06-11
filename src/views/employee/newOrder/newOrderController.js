@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupForm();
 
+    setupOrderType();
+
 });
 
 
@@ -169,44 +171,147 @@ function setupForm() {
 
 }
 
+function setupOrderType() {
 
-function registerOrder() {
+    const orderType =
+        document.querySelector(
+            "#orderType"
+        );
+
+    const mesaContainer =
+        document.querySelector(
+            "#mesaContainer"
+        );
+
+    const direccionContainer =
+        document.querySelector(
+            "#direccionContainer"
+        );
+
+    orderType.addEventListener(
+        "change",
+        () => {
+
+            /**
+             * MOSTRAR MESA
+             */
+            if (
+                orderType.value ===
+                "Para consumir aquí"
+            ) {
+
+                mesaContainer.style.display =
+                    "block";
+
+            } else {
+
+                mesaContainer.style.display =
+                    "none";
+            }
+
+            /**
+             * MOSTRAR DIRECCIÓN
+             */
+            if (
+                orderType.value ===
+                "A domicilio"
+            ) {
+
+                direccionContainer.style.display =
+                    "block";
+
+            } else {
+
+                direccionContainer.style.display =
+                    "none";
+            }
+        }
+    );
+}
+
+
+async function registerOrder() {
 
     const customerName =
         document.querySelector(
             "#customerName"
         ).value;
 
-
     const orderType =
         document.querySelector(
-            "input[name='orderType']:checked"
-        );
+            "#orderType"
+        ).value;
 
+    const numeroMesa =
+        document.querySelector(
+            "#numeroMesa"
+        ).value;
+
+    const direccionEntrega =
+        document.querySelector(
+            "#direccionEntrega"
+        ).value;
 
     const observation =
         document.querySelector(
             "#orderObservation"
         ).value;
 
-
-    // VALIDAR
+    /**
+     * VALIDAR
+     */
     if (
-        customerName === "" ||
-        !orderType ||
+        customerName === ""
+        ||
+        orderType === ""
+        ||
         products.length === 0
     ) {
 
         alert(
-            "Complete all fields"
+            "Complete todos los campos"
         );
 
         return;
-
     }
 
+    /**
+     * VALIDAR MESA
+     */
+    if (
+        orderType ===
+        "Para consumir aquí"
+        &&
+        numeroMesa === ""
+    ) {
 
-    // TOTAL
+        alert(
+            "Ingrese número de mesa"
+        );
+
+        return;
+    }
+
+    /**
+     * VALIDAR DIRECCIÓN
+     */
+    if (
+        orderType ===
+        "A domicilio"
+        &&
+        direccionEntrega === ""
+    ) {
+
+        alert(
+            "Ingrese dirección"
+        );
+
+        return;
+    }
+
+    /**
+     * CALCULAR TOTAL
+     */
     const total =
         products.reduce(
             (acc, product) => {
@@ -223,56 +328,79 @@ function registerOrder() {
             0
         );
 
+    /**
+     * FORM DATA
+     */
+    const formData =
+        new FormData();
 
-    // PEDIDO
-    const newOrder = {
-        
-        id: Date.now(),
-
-        customer: customerName,
-
-        type: orderType.value,
-
-        observation,
-
-        products,
-
-        total,
-
-        status: "En proceso",
-
-        date:
-            new Date()
-            .toLocaleDateString()
-
-    };
-
-
-    // OBTENER ORDERS
-    const orders =
-        JSON.parse(
-            localStorage.getItem("orders")
-        )
-        || [];
-
-
-    // GUARDAR
-    orders.push(newOrder);
-
-
-    localStorage.setItem(
-        "orders",
-        JSON.stringify(orders)
+    formData.append(
+        "nombreClienteOpcional",
+        customerName
     );
 
-
-    alert(
-        "Pedido registrado correctamente"
+    formData.append(
+        "tipoEntrega",
+        orderType
     );
 
+    formData.append(
+        "numeroMesa",
+        numeroMesa
+    );
 
-    // REDIRECCIONAR
-    window.location.href =
-        "../orders/orders.html";
+    formData.append(
+        "direccionEntrega",
+        direccionEntrega
+    );
 
+    formData.append(
+        "observaciones",
+        observation
+    );
+
+    formData.append(
+        "total",
+        total
+    );
+
+    try {
+
+        /**
+         * ENVIAR PEDIDO
+         */
+        const response =
+            await fetch(
+                "http://localhost:8080/turpial/pedido",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const result =
+            await response.json();
+
+        alert(result.message);
+
+        /**
+         * REDIRECCIONAR
+         */
+        if (
+            result.status ===
+            "success"
+        ) {
+
+            window.location.href =
+                "../orders/orders.html";
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error registrando pedido"
+        );
+    }
 }
