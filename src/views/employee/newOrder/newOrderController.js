@@ -371,7 +371,7 @@ async function registerOrder() {
          */
         const response =
             await fetch(
-                "http://localhost:8080/turpial/pedido",
+                "http://localhost:8080/turpialJava/pedido",
                 {
                     method: "POST",
                     body: formData
