@@ -1,26 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    renderOrders();
-
+    fetchAndRenderOrders(true); // Carga inicial (muestra alertas de error)
     setupBackButton();
+    setupFilters();
 
+    // Polling cada 10 segundos (silencioso, no interrumpe al usuario con alertas)
+    setInterval(() => {
+        fetchAndRenderOrders(false);
+    }, 10000);
 });
 
+let allOrders = [];
 
-async function renderOrders() {
+async function fetchAndRenderOrders(showErrors = false) {
     const container = document.querySelector("#ordersContainer");
     if (!container) return;
 
-    // Obtener el usuario activo de localStorage
     const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
     if (!usuarioActivo) {
-        alert("Debes iniciar sesión para ver tu historial de pedidos.");
-        window.location.href = "../../auth/login/login.html";
+        if (showErrors) {
+            alert("Debes iniciar sesión para ver tu historial de pedidos.");
+            window.location.href = "../../auth/login/login.html";
+        }
         return;
     }
 
     try {
-        // Realizar fetch al backend para obtener los pedidos del usuario
         const response = await fetch("http://localhost:8080/turpialJava/HistorialServlet?accion=listar", {
             method: "POST",
             headers: {
@@ -29,83 +33,122 @@ async function renderOrders() {
             body: JSON.stringify({ idUsuario: usuarioActivo.idUsuario })
         });
 
-        // Validar respuesta HTTP
-        if (!response.ok) {
-            throw new Error("Error en la respuesta del servidor");
-        }
+        if (!response.ok) throw new Error("Error en la respuesta del servidor");
 
-        // Parsear respuesta a JSON
         const data = await response.json();
 
-        // Validar si la petición se completó exitosamente
         if (data.status === "success") {
-            const orders = data.orders || [];
-
-            // Validar si la lista de pedidos está vacía
-            if (orders.length === 0) {
-                container.innerHTML = `
-                    <p class="order-history__empty">
-                        No hay pedidos realizados
-                    </p>
-                `;
-                return;
-            }
-
-            // Limpiar contenedor
-            container.innerHTML = "";
-
-            // Recorrer los pedidos y agregarlos a la vista
-            orders.forEach((order, index) => {
-                const orderCard = document.createElement("div");
-                orderCard.classList.add("order-history__item", "section");
-
-                // Configurar contenido HTML de la tarjeta de pedido
-                orderCard.innerHTML = `
-                    <h2 class="order-history__title">
-                        Pedido #${index + 1} (Ref: ${order.idPedido})
-                    </h2>
-                    <p class="order-history__date">
-                        Fecha: ${order.date}
-                    </p>
-                    <p class="order-history__total">
-                        Total: $${order.total}
-                    </p>
-                    <p class="order-history__status">
-                        Estado: ${order.status}
-                    </p>
-                `;
-
-                // Agregar tarjeta al contenedor principal
-                container.appendChild(orderCard);
-            });
+            allOrders = data.orders || [];
+            applyFiltersAndRender();
         } else {
-            alert("Error al cargar pedidos: " + data.message);
+            if (showErrors) alert("Error al cargar pedidos: " + data.message);
         }
     } catch (error) {
-        console.error("Error al cargar pedidos desde el backend:", error);
-        container.innerHTML = `
-            <p class="order-history__empty">
-                No se pudo conectar con el servidor para obtener el historial.
-            </p>
-        `;
+        console.error("Error al cargar pedidos:", error);
+        if (showErrors) {
+            container.innerHTML = `
+                <p class="order-history__empty">
+                    No se pudo conectar con el servidor para obtener el historial.
+                </p>
+            `;
+        }
     }
 }
 
+function setupFilters() {
+    const inputs = ["#filterCustomer", "#filterStatus", "#filterDelivery", "#filterDateFrom", "#filterDateTo"];
+    inputs.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el) {
+            el.addEventListener("input", applyFiltersAndRender);
+            el.addEventListener("change", applyFiltersAndRender);
+        }
+    });
+}
 
-function setupBackButton() {
+function applyFiltersAndRender() {
+    const container = document.querySelector("#ordersContainer");
+    if (!container) return;
 
-    const backButton =
-        document.querySelector("#backButton");
+    const customer = document.querySelector("#filterCustomer") ? document.querySelector("#filterCustomer").value.toLowerCase().trim() : "";
+    const status = document.querySelector("#filterStatus") ? document.querySelector("#filterStatus").value : "";
+    const delivery = document.querySelector("#filterDelivery") ? document.querySelector("#filterDelivery").value : "";
+    const dateFrom = document.querySelector("#filterDateFrom") ? document.querySelector("#filterDateFrom").value : "";
+    const dateTo = document.querySelector("#filterDateTo") ? document.querySelector("#filterDateTo").value : "";
 
+    let filtered = allOrders.filter(order => {
+        if (status && order.status !== status) return false;
+        if (delivery && order.tipoEntrega !== delivery) return false;
+        
+        const customerMatch = (order.customerName || "").toLowerCase();
+        if (customer && !customerMatch.includes(customer)) return false;
 
-    if (!backButton) return;
-
-
-    backButton.addEventListener("click", () => {
-
-        window.location.href =
-        "../profile/profile.html";
-
+        if (order.date) {
+            const orderDateStr = order.date.split(" ")[0]; // YYYY-MM-DD
+            if (dateFrom && orderDateStr < dateFrom) return false;
+            if (dateTo && orderDateStr > dateTo) return false;
+        }
+        return true;
     });
 
+    // Ordenamiento inteligente: Pendientes primero (En preparación, Listo, En espera)
+    const pendingStates = ["En preparación", "Listo", "En espera"];
+    filtered.sort((a, b) => {
+        const aPending = pendingStates.includes(a.status);
+        const bPending = pendingStates.includes(b.status);
+        if (aPending && !bPending) return -1;
+        if (!aPending && bPending) return 1;
+        
+        // Criterio secundario: Más recientes primero
+        const aDate = a.date || "";
+        const bDate = b.date || "";
+        return bDate.localeCompare(aDate);
+    });
+
+    // Limpiar contenedor
+    container.innerHTML = "";
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <p class="order-history__empty">
+                No hay pedidos que coincidan con los filtros
+            </p>
+        `;
+        return;
+    }
+
+    filtered.forEach((order, index) => {
+        const orderCard = document.createElement("div");
+        orderCard.classList.add("order-history__item", "section");
+
+        orderCard.innerHTML = `
+            <h2 class="order-history__title">
+                Pedido (Ref: ${order.idPedido})
+            </h2>
+            <p class="order-history__date">
+                <strong>Cliente:</strong> ${order.customerName}
+            </p>
+            <p class="order-history__date">
+                <strong>Entrega:</strong> ${order.tipoEntrega}
+            </p>
+            <p class="order-history__date">
+                <strong>Fecha:</strong> ${order.date}
+            </p>
+            <p class="order-history__total">
+                <strong>Total:</strong> $${order.total}
+            </p>
+            <p class="order-history__status">
+                <strong>Estado:</strong> ${order.status}
+            </p>
+        `;
+        container.appendChild(orderCard);
+    });
+}
+
+function setupBackButton() {
+    const backButton = document.querySelector("#backButton");
+    if (!backButton) return;
+    backButton.addEventListener("click", () => {
+        window.location.href = "../profile/profile.html";
+    });
 }

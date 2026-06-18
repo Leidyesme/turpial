@@ -108,9 +108,14 @@ function renderCart() {
         );
 
 
-        const imagePath = (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "")
-            ? product.image
-            : "../../../public/turpial.png";
+        // Centralizar rutas de imágenes para compatibilidad con Vite (/nombre_imagen.png)
+        let imagePath = "/turpial.png";
+        if (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "") {
+            imagePath = product.image.replace(/^.*\/public\//, "/");
+            if (!imagePath.startsWith("/")) {
+                imagePath = "/" + imagePath;
+            }
+        }
 
         card.innerHTML = `
 

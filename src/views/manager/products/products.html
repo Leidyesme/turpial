@@ -24,6 +24,27 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal para Agregar Producto -->
+    <div id="productModal" class="modal" style="display: none;">
+        <div class="modal-content section">
+            <h2 id="modalTitle" style="color: var(--text-color); margin-bottom: 10px;">Agregar Producto</h2>
+            <form id="productForm" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <input type="text" id="prodName" class="input" placeholder="Nombre de Producto" required>
+                <input type="number" id="prodPrice" class="input" placeholder="Precio" min="1" required>
+                <input type="number" id="prodStock" class="input" placeholder="Stock" min="0" required>
+                <select id="prodCategory" class="input" required>
+                    <option value="">Seleccione Categoría</option>
+                </select>
+                <input type="text" id="prodImage" class="input" placeholder="Ruta de Imagen (Ej: /breakfast/breakfast1.png)">
+                <div class="modal-actions" style="display: flex; justify-content: space-between; margin-top: 10px; width: 100%;">
+                    <button type="button" id="cancelProdBtn" class="btn btn--rojo" style="padding: 10px 20px;">Cancelar</button>
+                    <button type="submit" class="btn btn--verde" style="padding: 10px 20px;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../../../js/auth/authGuard.js"></script>
     <script type="module" src="./productsController.js"></script>
 </body>

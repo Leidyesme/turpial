@@ -4,19 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupRegister() {
     const formulario = document.querySelector("#registroForm");
-    if (!formulario) return;
+    if (!formulario) return; // Si no existe el formulario en la página, salimos.
 
     formulario.addEventListener("submit", (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Evita que la página se recargue al enviar el formulario.
 
-        // OBTENER DATOS 
+        // OBTENER DATOS DEL DOM
         const name = document.querySelector("#name").value.trim();
         const email = document.querySelector("#email").value.trim();
         const phone = document.querySelector("#phone").value.trim();
         const direccion = document.querySelector("#direccion").value.trim();
         const password = document.querySelector("#password").value.trim();
 
-        // VALIDACIONES DE CAMPOS
+        // VALIDACIONES DE CAMPOS EN LA PARTE DEL CLIENTE
         if (!name || !email || !phone || !direccion || !password) {
             alert("Todos los campos son obligatorios");
             return;
@@ -56,27 +56,32 @@ function setupRegister() {
             headers: { "Content-Type": "application/json"},
             body: JSON.stringify(usuarioData)
         })
-        .then(response => {
+        .then(async response => {
+            // Convertimos la respuesta a JSON (usamos async para manejar promesas)
+            const data = await response.json().catch(() => ({})); 
+
+            // Si el código HTTP no es 200-299, lanzamos error usando el mensaje del JSON
             if (!response.ok) {
-                throw new Error("Error en la respuesta del servidor");
+                throw new Error(data.message || "Error desconocido en el servidor");
             }
-            return response.json(); // Esperamos una respuesta JSON del servlet
+            return data;
         })
         .then(data => {
-
-            console.log(data);
+            // Proceso cuando el servidor responde correctamente (status 200)
+            console.log("Respuesta del servidor:", data);
             
-            // Evaluamos la respuesta enviada por Java
             if (data.status === "success") {
                 alert("¡Usuario registrado correctamente en la Base de Datos!");
                 window.location.href = "../login/login.html";
             } else {
+                // Caso donde el servidor llega, pero detecta error (ej. email duplicado)
                 alert("Error al registrar: " + data.message);
             }
         })
         .catch(error => {
+            // Captura errores de conexión o el error lanzado anteriormente
             console.error("Error en la conexión:", error);
-            alert("No se pudo conectar con el servidor de El Turpial. Asegúrate de que Tomcat esté corriendo.");
+            alert("Error: " + error.message);
         });
     });
 }

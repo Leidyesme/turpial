@@ -1,13 +1,67 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",
+    async () => {
 
-    setupAddProduct();
+        await loadProducts();
 
-    setupForm();
+        setupAddProduct();
 
-    setupOrderType();
+        setupForm();
 
-});
+        setupOrderType();
 
+    }
+);
+
+let availableProducts = [];
+
+async function loadProducts() {
+
+    try {
+
+        const response =
+            await fetch(
+                "http://localhost:8080/turpialJava/producto"
+            );
+
+        const data =
+            await response.json();
+
+        availableProducts = data;
+
+        const select =
+            document.querySelector(
+                "#productSelect"
+            );
+
+        data.forEach((product) => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                product.idProducto;
+
+            option.textContent =
+                `${product.nombre} - $${product.precio}`;
+
+            select.appendChild(
+                option
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Error cargando productos"
+        );
+
+    }
+}
 
 let products = [];
 
@@ -21,7 +75,7 @@ function setupAddProduct() {
 
 
     addProductBtn.addEventListener("click", () => {
-
+    
         addProduct();
 
     });
@@ -31,50 +85,71 @@ function setupAddProduct() {
 
 function addProduct() {
 
-    const productName =
-        prompt("Nombre del producto");
-
-    const productPrice =
-        parseFloat(
-            prompt("Precio producto")
-        );
+    const productId =
+        document.querySelector(
+            "#productSelect"
+        ).value;
 
     const quantity =
         parseInt(
-            prompt("Cantidad")
+            document.querySelector(
+                "#productQuantity"
+            ).value
         );
 
-
-    // VALIDAR
     if (
-        !productName ||
-        isNaN(productPrice) ||
-        isNaN(quantity)
+        !productId ||
+        isNaN(quantity) ||
+        quantity <= 0
     ) {
 
-        alert("Datos inválidos");
+        alert(
+            "Seleccione producto y cantidad válida"
+        );
 
         return;
-
     }
 
+    const selectedProduct =
+        availableProducts.find(
+            product =>
+                product.idProducto
+                === productId
+        );
 
-    const product = {
+    if (!selectedProduct) {
 
-        name: productName,
+        return;
+    }
 
-        price: productPrice,
+    const existingProduct = products.find(p => p.idProducto === selectedProduct.idProducto);
+    if (existingProduct) {
+        existingProduct.quantity += quantity;
+    } else {
+        const product = {
 
-        quantity: quantity
+            idProducto:
+                selectedProduct.idProducto,
 
-    };
+            name:
+                selectedProduct.nombre,
 
+            price:
+                selectedProduct.precio,
 
-    products.push(product);
+            quantity:
+                quantity
 
+        };
+
+        products.push(product);
+    }
+
+    // Reset fields
+    document.querySelector("#productSelect").value = "";
+    document.querySelector("#productQuantity").value = "1";
 
     renderProducts();
-
 }
 
 
@@ -329,40 +404,27 @@ async function registerOrder() {
         );
 
     /**
-     * FORM DATA
+     * PAYLOAD EN FORMATO JSON
      */
-    const formData =
-        new FormData();
+    const activeUserStr = localStorage.getItem("usuarioActivo");
+    const activeUser = activeUserStr ? JSON.parse(activeUserStr) : null;
+    const idUsuario = activeUser ? activeUser.idUsuario : null;
 
-    formData.append(
-        "nombreClienteOpcional",
-        customerName
-    );
-
-    formData.append(
-        "tipoEntrega",
-        orderType
-    );
-
-    formData.append(
-        "numeroMesa",
-        numeroMesa
-    );
-
-    formData.append(
-        "direccionEntrega",
-        direccionEntrega
-    );
-
-    formData.append(
-        "observaciones",
-        observation
-    );
-
-    formData.append(
-        "total",
-        total
-    );
+    const payload = {
+        idUsuario: idUsuario,
+        nombreClienteOpcional: customerName,
+        tipoEntrega: orderType,
+        numeroMesa: numeroMesa !== "" ? parseInt(numeroMesa) : null,
+        direccionEntrega: direccionEntrega !== "" ? direccionEntrega : null,
+        observaciones: observation,
+        total: total,
+        products: products.map(p => ({
+            idProducto: p.idProducto,
+            name: p.name,
+            price: p.price,
+            quantity: p.quantity
+        }))
+    };
 
     try {
 
@@ -374,9 +436,26 @@ async function registerOrder() {
                 "http://localhost:8080/turpialJava/pedido",
                 {
                     method: "POST",
-                    body: formData
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
                 }
             );
+
+        // Si la petición es exitosa, guardar también en localStorage para consistencia del frontend
+        if (response.ok) {
+            const localOrders = JSON.parse(localStorage.getItem("orders")) || [];
+            localOrders.push({
+                clientName: customerName || "Cliente Anónimo",
+                address: direccionEntrega || "No especificada",
+                status: "En preparación",
+                total: total,
+                products: products,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem("orders", JSON.stringify(localOrders));
+        }
 
         const result =
             await response.json();
