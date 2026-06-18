@@ -140,7 +140,66 @@ function applyFiltersAndRender() {
             <p class="order-history__status">
                 <strong>Estado:</strong> ${order.status}
             </p>
+            ${order.status === "Entregado" ? `
+            <div class="order-history__return-section" style="margin-top: 15px; border-top: 1px solid var(--marron); padding-top: 10px; width: 100%;">
+                <button class="btn btn--rojo btn-solicitar-devolucion" data-id="${order.idPedido}" style="width: 100%;">Solicitar Devolución</button>
+                <div class="form-devolucion" id="form-dev-${order.idPedido}" style="display: none; margin-top: 10px; flex-direction: column; gap: 8px; width: 100%;">
+                    <textarea class="input input-motivo" placeholder="Escribe el motivo de la devolución..." required style="width: 100%; min-height: 60px; box-sizing: border-box;"></textarea>
+                    <button class="btn btn--verde btn-enviar-devolucion" data-id="${order.idPedido}" style="width: 100%;">Enviar Solicitud</button>
+                </div>
+            </div>
+            ` : ''}
         `;
+        
+        // Agregar manejador para expandir/colapsar el formulario
+        const btnSolicitar = orderCard.querySelector(".btn-solicitar-devolucion");
+        if (btnSolicitar) {
+            btnSolicitar.addEventListener("click", () => {
+                const form = orderCard.querySelector(".form-devolucion");
+                if (form) {
+                    form.style.display = form.style.display === "none" ? "flex" : "none";
+                }
+            });
+        }
+
+        // Agregar manejador para enviar la solicitud al servlet
+        const btnEnviar = orderCard.querySelector(".btn-enviar-devolucion");
+        if (btnEnviar) {
+            btnEnviar.addEventListener("click", async () => {
+                const idPedido = btnEnviar.dataset.id;
+                const motivo = orderCard.querySelector(".input-motivo").value.trim();
+                if (!motivo) {
+                    alert("Por favor, escribe el motivo de la devolución");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("http://localhost:8080/turpialJava/devolucion?accion=solicitar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ idPedido, motivo })
+                    });
+
+                    if (!response.ok) throw new Error();
+                    const data = await response.json();
+                    
+                    if (data.status === "success") {
+                        alert("Solicitud de devolución enviada exitosamente");
+                        if (usuarioActivo && typeof guardarHistorial === "function") {
+                            guardarHistorial(usuarioActivo.email, "Usuario", `Solicitó devolución para el pedido ${idPedido}`);
+                        }
+                        // Recargar historial
+                        fetchAndRenderOrders(false);
+                    } else {
+                        alert("Error al enviar solicitud: " + data.message);
+                    }
+                } catch (error) {
+                    console.error("Error solicitando devolución:", error);
+                    alert("No se pudo conectar con el servidor para enviar la devolución.");
+                }
+            });
+        }
+
         container.appendChild(orderCard);
     });
 }

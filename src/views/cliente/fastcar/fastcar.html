@@ -15,9 +15,24 @@
                 <!-- Productos del carrito -->
             </div>
             
-            <!-- DIRECCION DE ENTREGA -->
-            <div class="fastcar__address-section section">
-                <h3 class="fastcar__address-title">Dirección de Entrega</h3>
+            <!-- TIPO DE PEDIDO -->
+            <div class="fastcar__delivery-section section">
+                <h3 class="fastcar__delivery-title">Tipo de Pedido</h3>
+                <select id="tipoPedido" class="input" >
+                    <option value="A domicilio">A domicilio</option>
+                    <option value="Para recoger">Para recoger</option>
+                    <option value="Para consumir aquí">Para consumir aquí</option>
+                </select>
+                
+                <!-- Input de Mesa (solo si es Consumir aquí) -->
+                <div id="mesaContainer" style="display: none; margin-top: 10px; width: 100%;">
+                    <label style="color: var(--text-color); font-weight: bold; display: block; margin-bottom: 5px;">Número de Mesa:</label>
+                    <input type="number" id="numeroMesaInput" class="input" placeholder="Ej: 5" min="1" style="width: 100%;">
+                </div>
+                
+            <!-- DIRECCION DE ENTREGA (Condicional para Domicilio) -->
+            <div class="fastcar__address-section section" id="deliveryAddressContainer">
+                <h3 class="fastcar__address-title">Dirección de Entrega</h3> -->
                 
                 <!-- Tarjeta de dirección registrada -->
                 <div class="address-card" id="savedAddressCard">
@@ -39,6 +54,23 @@
                         </span>
                     </label>
                     <input type="text" class="input address-card__input" id="newAddressInput" placeholder="Escribe la nueva dirección..." disabled>
+                </div>
+            </div>
+
+            <!-- MÉTODO DE PAGO -->
+            <div class="fastcar__payment-section section">
+                <h3 class="fastcar__payment-title">Método de Pago</h3>
+                <select id="metodoPago" class="input" style="width: 100%;">
+                    <option value="Efectivo">Efectivo</option>
+                </select>
+                
+                <!-- Sección efectivo (cambio/vuelto) -->
+                <div id="efectivoContainer" style="display: none; margin-top: 10px; width: 100%;">
+                    <label style="color: var(--text-color); font-weight: bold; display: block; margin-bottom: 5px;">¿Con cuánto vas a pagar?</label>
+                    <input type="number" id="montoRecibidoInput" class="input" placeholder="Monto recibido ($)" min="0" style="width: 100%;">
+                    <p id="vueltoContainer" style="margin-top: 10px; font-weight: bold; color: var(--green); font-size: 1.1em; display: none;">
+                        Vuelto: <span id="vueltoValor">$0</span>
+                    </p>
                 </div>
             </div>
 
