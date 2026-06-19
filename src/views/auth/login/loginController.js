@@ -27,8 +27,15 @@ loginForm.addEventListener("submit", async (e) => {
 
         // Se verifica login
         if (data.status === "success") {
-            // Guardar usuario en localStorage para que authGuard lo detecte
-            localStorage.setItem("usuarioActivo", JSON.stringify(data.usuario));
+
+            // Creamos un objeto limpio que SIEMPRE tenga la propiedad 'rol'
+        const usuarioGuardar = {
+            ...data.usuario,           // Copia todos los datos (name, idUsuario, etc.)
+            rol: data.usuario.idRol    // Creamos la propiedad 'rol' con el valor de 'idRol'
+        };
+
+        // Guardamos este objeto limpio
+        localStorage.setItem("usuarioActivo", JSON.stringify(usuarioGuardar));
             
             // Guardar historial local
             guardarHistorial(email, "Usuario", "Inició sesión");

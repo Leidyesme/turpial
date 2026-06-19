@@ -367,3 +367,30 @@ function setupPedidoLogic() {
 }
 // Llama a la función al inicio
 setupPedidoLogic();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const metodoPago = document.getElementById("metodoPago");
+    const efectivoContainer = document.getElementById("efectivoContainer");
+    const montoInput = document.getElementById("montoRecibidoInput");
+    const vueltoValor = document.getElementById("vueltoValor");
+
+    // Mostrar/Ocultar campo de efectivo al cambiar el select
+    metodoPago.addEventListener("change", () => {
+        efectivoContainer.style.display = (metodoPago.value === "Efectivo") ? "block" : "none";
+    });
+
+    // Calcular vuelto en tiempo real
+    montoInput.addEventListener("input", () => {
+        const total = obtenerTotalNumerico(); // Función que ya debes tener para el total
+        const recibido = parseFloat(montoInput.value) || 0;
+        const vuelto = recibido - total;
+        
+        const contenedorVuelto = document.getElementById("vueltoContainer");
+        if (vuelto >= 0) {
+            vueltoValor.textContent = "$" + vuelto.toLocaleString();
+            contenedorVuelto.style.display = "block";
+        } else {
+            contenedorVuelto.style.display = "none";
+        }
+    });
+});
