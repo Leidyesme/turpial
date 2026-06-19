@@ -13,10 +13,9 @@ from "../helpers/generateEmployeeId.js";
 
 export function setupAddEmployee(loadEmployees) {
 
-    const form =
-        document.querySelector(
-            "#employeeForm"
-        );
+    const form = document.querySelector("#employeeForm");
+    if (!form) return;
+
 
 
     form.addEventListener(
@@ -26,57 +25,43 @@ export function setupAddEmployee(loadEmployees) {
 
             e.preventDefault();
 
-
-            const name =
-                document.querySelector(
-                    "#employeeName"
-                ).value;
-
-
-            const email =
-                document.querySelector(
-                    "#employeeEmail"
-                ).value;
-
-
-            const role =
-                document.querySelector(
-                    "#employeeRole"
-                ).value;
-
-
             const payload = {
-                name,
-                email,
-                role
-            };
+            name: document.querySelector("#employeeName").value.trim(),
+            email: document.querySelector("#employeeEmail").value.trim(),
+            role: document.querySelector("#employeeRole").value
+        };
 
-            try {
-                const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=createEmployee", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error("Error en la respuesta del servidor");
-                }
-
-                const data = await response.json();
-                if (data.status === "success") {
-                    alert("Empleado agregado correctamente");
-                    form.reset();
-                    loadEmployees();
-                } else {
-                    alert("Error al guardar: " + data.message);
-                }
-            } catch (error) {
-                console.error("Error al crear empleado:", error);
-                alert("No se pudo conectar con el servidor.");
-            }
+        // Validación básica
+        if (!payload.name || !payload.email || !payload.role) {
+            alert("Todos los campos son obligatorios");
+            return;
         }
-    );
 
-}
+        try {
+            const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=createEmployee", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            // Convertimos la respuesta a JSON
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                // Si el servidor falla (ej. 409 Conflict), usamos el mensaje del backend
+                throw new Error(data.message || "Error en el servidor al guardar el empleado");
+            }
+
+            if (data.status === "success") {
+                alert("Empleado agregado correctamente");
+                form.reset();
+                loadEmployees(); // Refresca la tabla
+            } else {
+                alert("Error: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error al crear empleado:", error);
+            alert("Error: " + error.message);
+        }
+    });
+}

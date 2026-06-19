@@ -12,6 +12,29 @@
         <div class="order-history">
             <h1 class="order-history__main-title">Historial de pedidos</h1>
 
+            <!-- Barra de Filtros Avanzados -->
+            <div class="order-history__filters" style="display: flex; flex-wrap: wrap; gap: 10px; width: 95%; max-width: 400px; padding: 15px; margin: 10px auto; background-color: var(--beige); border-radius: 15px; box-sizing: border-box; justify-content: center;">
+                <input type="text" id="filterCustomer" class="input" placeholder="Nombre cliente" style="width: 100%; max-width: 370px;">
+                <select id="filterStatus" class="input" style="width: 47%; min-width: 120px;">
+                    <option value="">Todos los estados</option>
+                    <option value="En preparación">En preparación</option>
+                    <option value="Listo">Listo</option>
+                    <option value="En espera">En espera</option>
+                    <option value="Entregado">Entregado</option>
+                </select>
+                <select id="filterDelivery" class="input" style="width: 47%; min-width: 120px;">
+                    <option value="">Cualquier entrega</option>
+                    <option value="Para consumir aquí">Para consumir aquí</option>
+                    <option value="A domicilio">A domicilio</option>
+                    <option value="Para recoger">Para recoger</option>
+                </select>
+                <div style="display: flex; gap: 5px; width: 100%; align-items: center; justify-content: space-between; max-width: 370px;">
+                    <input type="date" id="filterDateFrom" class="input" style="width: 45%;">
+                    <span style="color: var(--text-color); font-weight: bold;">a</span>
+                    <input type="date" id="filterDateTo" class="input" style="width: 45%;">
+                </div>
+            </div>
+
             <!-- PEDIDOS DINÁMICOS -->
             <div id="ordersContainer">
 

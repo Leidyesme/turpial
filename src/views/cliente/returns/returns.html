@@ -14,17 +14,10 @@
                 <img src="../../../../public/turpial.png" class="img" alt="El Turpial Logo"> 
             </div> 
             <h1 class="returns__title"> Registro de devoluciones </h1> 
-            <form id="returnsForm" class="returns__form"> 
-                <input type="text" id="pedido" class="input" placeholder="ID Pedido" required> 
-                <select id="producto" class="input" required> 
-                    <option value=""> Selecciona un producto </option> 
-                    <option value="Café"> Café </option> 
-                    <option value="Cappuccino"> Cappuccino </option> 
-                    <option value="Sandwich"> Sandwich </option> 
-                </select> 
-                <input type="number" id="valor" class="input" placeholder="Valor reembolso" required> 
-                <textarea id="motivo" class="input" placeholder="Motivo devolución" required></textarea> 
-                <button type="submit" class="btn btn--rojo"> Registrar devolución </button> 
+            <form id="returnsForm" class="returns__form" style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 400px; margin: 0 auto;"> 
+                <input type="text" id="pedido" class="input" placeholder="ID Pedido" required style="width: 100%;"> 
+                <textarea id="motivo" class="input" placeholder="Motivo devolución" required style="width: 100%; min-height: 80px; box-sizing: border-box;"></textarea> 
+                <button type="submit" class="btn btn--rojo" style="width: 100%;"> Registrar devolución </button> 
             </form> 
             <div id="listaDevoluciones"> 
 

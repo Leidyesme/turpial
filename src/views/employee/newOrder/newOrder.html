@@ -27,10 +27,26 @@
                 </div>
                 <div class="newOrder__description">
                     <p class="newOrder__description-title">Descripción del pedido:</p>
-                    <div class="newOrder__description-content" id="productsContainer">
-                        
+                    <div class="newOrder__selectors" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <select
+                            class="newOrder__input input"
+                            id="productSelect">
+                            <option value="">
+                                Seleccione un producto
+                            </option>
+                        </select>
+
+                        <input
+                            type="number"
+                            class="newOrder__input input"
+                            id="productQuantity"
+                            placeholder="Cantidad"
+                            min="1"
+                            value="1">
                     </div>
-                    <button type="button" class="btn--marron btn" id="addProductBtn">Agregar producto</button>
+                    <div class="newOrder__description-content" id="productsContainer">
+                    </div>
+                    <button type="button" class="btn--marron btn" id="addProductBtn">Añadir al pedido</button>
                     <input type="text" class="newOrder__input input" id="orderObservation" placeholder="Observaciones">
                     <p class="newOrder__total" id="orderTotal">Total: $8.000</p>
                 </div>

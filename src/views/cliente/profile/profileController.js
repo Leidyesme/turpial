@@ -1,156 +1,66 @@
-document.addEventListener(
+document.addEventListener("DOMContentLoaded", () => {
+    // Recuperar usuario del localStorage
+    const usuario = JSON.parse(localStorage.getItem("usuarioActivo"));
 
-    "DOMContentLoaded",
-
-    () => {
-
-        cargarPerfil();
-        setupLogout();
-    }
-);
-
-/**
- * Metodo que consulta
- * los datos actualizados
- * del usuario.
- */
-function cargarPerfil() {
-
-    /**
-     * Recuperamos sesión.
-     */
-
-    const usuarioActivo =
-
-        JSON.parse(
-
-            localStorage.getItem(
-                "usuarioActivo"
-            )
-        );
-
-    /**
-     * Validar login.
-     */
-
-    if (!usuarioActivo) {
-
-        alert(
-            "Debes iniciar sesión"
-        );
-
-        window.location.href =
-
-            "../../auth/login/login.html";
-
+    if (!usuario) {
+        window.location.href = "../auth/login/login.html";
         return;
     }
 
-    /**
-     * JSON backend.
-     */
+    // Configurar la página
+    setupLogout();
+    configurarVisibilidadSegunRol(usuario);
+    
+    // Cargar datos del usuario (ya sea del localStorage o del Servidor)
+    // Primero ponemos lo que tenemos en mano (rápido) y luego consultamos al servidor
+    mostrarDatosEnHtml(usuario);
+    cargarPerfilDesdeServidor(usuario); 
+});
 
-    const data = {
+/**
+ * Función segura para evitar el error "Cannot set properties of null"
+ */
+function actualizarElemento(id, valor) {
+    const elemento = document.getElementById(id);
+    if (elemento) {
+        elemento.textContent = valor || "";
+    }
+}
 
-        idUsuario:
-            usuarioActivo.idUsuario
-    };
+function mostrarDatosEnHtml(usuario) {
+    actualizarElemento("profileName", usuario.name);
+    actualizarElemento("profileEmail", usuario.email);
+    actualizarElemento("profilePhone", usuario.phone);
+    actualizarElemento("profileEstado", usuario.estado);
+    
+    const btnLogo = document.querySelector(".profile__usuario");
+    if(btnLogo) btnLogo.textContent = usuario.name ? usuario.name.charAt(0).toUpperCase() : "U";
+}
 
-    /**
-     * Fetch backend.
-     */
-
-    fetch(
-
-        "http://localhost:8080/turpialJava/UsuarioServlet?accion=readUser",
-
-        {
-
-            method: "POST",
-
-            headers: {
-
-                "Content-Type":
-                    "application/json"
-            },
-
-            body: JSON.stringify(data)
-        }
-    )
-
-    .then(response => {
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Error servidor"
-            );
-        }
-
-        return response.json();
+function cargarPerfilDesdeServidor(usuario) {
+    fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=readUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idUsuario: usuario.idUsuario })
     })
-
+    .then(res => res.json())
     .then(data => {
-
-        console.log(data);
-
-        /**
-         * Validar respuesta.
-         */
-
-        if (
-
-            data.status ===
-            "success"
-
-        ) {
-
-            /**
-             * Mostrar datos
-             * en HTML.
-             */
-
-            document.querySelector(
-                "#profileName"
-            ).textContent =
-
-                data.name;
-
-            document.querySelector(
-                "#profileEmail"
-            ).textContent =
-
-                data.email;
-
-            document.querySelector(
-                "#profilePhone"
-            ).textContent =
-
-                data.phone;
-
-            document.querySelector(
-                "#profileEstado"
-            ).textContent =
-
-                data.estado;
-        }
-
-        else {
-
-            alert(
-                data.message
-            );
+        if (data.status === "success") {
+            actualizarElemento("profileName", data.name);
+            actualizarElemento("profileEmail", data.email);
+            actualizarElemento("profilePhone", data.phone);
+            actualizarElemento("profileEstado", data.estado);
         }
     })
+    .catch(err => console.error("Error al refrescar datos:", err));
+}
 
-    .catch(error => {
+function configurarVisibilidadSegunRol(usuario) {
+    const adminPanel = document.getElementById("adminPanel");
+    const clientePanel = document.getElementById("clientePanel");
 
-        console.error(error);
-
-        alert(
-            "Error conexión"
-        );
-    });
+    if (adminPanel) adminPanel.style.display = (usuario.rol === "ROL-001") ? "block" : "none";
+    if (clientePanel) clientePanel.style.display = (usuario.rol === "ROL-003") ? "block" : "none";
 }
 
 function setupLogout() {
@@ -158,11 +68,7 @@ function setupLogout() {
     if (!logoutBtn) return;
 
     logoutBtn.addEventListener("click", () => {
-        const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
-        if (usuarioActivo && typeof guardarHistorial === "function") {
-            guardarHistorial(usuarioActivo.email, "Usuario", "Cerró sesión");
-        }
-        localStorage.removeItem("usuarioActivo");
+        localStorage.clear(); // Limpieza profunda
         alert("Sesión cerrada");
         window.location.href = "../../auth/login/login.html";
     });

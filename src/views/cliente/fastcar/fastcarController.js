@@ -21,6 +21,13 @@ const savedAddressText = document.querySelector("#savedAddressText");
 const useSavedAddress = document.querySelector("#useSavedAddress");
 const useNewAddress = document.querySelector("#useNewAddress");
 const newAddressInput = document.querySelector("#newAddressInput");
+const tipoPedidoSelect = document.querySelector("#tipoPedido");
+const mesaContainer = document.querySelector("#mesaContainer");
+const numeroMesaInput = document.querySelector("#numeroMesaInput");
+const deliveryAddressContainer = document.querySelector("#deliveryAddressContainer");
+const montoRecibidoInput = document.querySelector("#montoRecibidoInput");
+const vueltoContainer = document.querySelector("#vueltoContainer");
+const vueltoValor = document.querySelector("#vueltoValor");
 
 
 let cart =
@@ -108,9 +115,25 @@ function renderCart() {
         );
 
 
-        const imagePath = (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "")
-            ? product.image
-            : "../../../public/turpial.png";
+        // Centralizar rutas de imágenes para compatibilidad con Vite (/nombre_imagen.png) y file://
+        let imagePath = "/turpial.png";
+        if (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "") {
+            if (window.location.protocol === "file:") {
+                let cleanPath = product.image;
+                if (cleanPath.includes("public/")) {
+                    cleanPath = cleanPath.substring(cleanPath.indexOf("public/") + 7);
+                }
+                if (cleanPath.startsWith("/")) {
+                    cleanPath = cleanPath.substring(1);
+                }
+                imagePath = "../../../../public/" + cleanPath;
+            } else {
+                imagePath = product.image.replace(/^.*\/public\//, "/");
+                if (!imagePath.startsWith("/")) {
+                    imagePath = "/" + imagePath;
+                }
+            }
+        }
 
         card.innerHTML = `
 
@@ -240,14 +263,17 @@ checkoutButton.addEventListener("click", async () => {
 
     // Preparar el cuerpo de la petición con la estructura esperada por HistorialServlet
     const payload = {
-        idUsuario: usuarioActivo.idUsuario,
-        total: total,
-        products: cart.map(item => ({
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity
-        }))
-    };
+    idUsuario: usuarioActivo.idUsuario,
+    total: total,
+    tipoEntrega: tipoPedidoSelect.value, // <--- NUEVO
+    numeroMesa: numeroMesaInput.value,    // <--- NUEVO
+    direccion: (tipoPedidoSelect.value === "A domicilio") ? selectedAddress : "N/A", // <--- NUEVO
+    products: cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+    }))
+};
 
     try {
         // Enviar el pedido al backend por medio de fetch
@@ -317,4 +343,54 @@ checkoutButton.addEventListener("click", async () => {
         console.error("Error al registrar pedido:", error);
         alert("No se pudo conectar con el servidor de El Turpial. Revisa que Tomcat esté activo.");
     }
+});
+function setupPedidoLogic() {
+    // Lógica para mostrar secciones según tipo
+    tipoPedidoSelect.addEventListener("change", () => {
+        const val = tipoPedidoSelect.value;
+        mesaContainer.style.display = (val === "Para consumir aquí") ? "block" : "none";
+        deliveryAddressContainer.style.display = (val === "A domicilio") ? "block" : "none";
+    });
+
+    // Lógica para calcular vuelto
+    montoRecibidoInput.addEventListener("input", () => {
+        const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const recibido = parseFloat(montoRecibidoInput.value) || 0;
+        
+        if (recibido >= total) {
+            vueltoContainer.style.display = "block";
+            vueltoValor.textContent = `$${(recibido - total).toLocaleString()}`;
+        } else {
+            vueltoContainer.style.display = "none";
+        }
+    });
+}
+// Llama a la función al inicio
+setupPedidoLogic();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const metodoPago = document.getElementById("metodoPago");
+    const efectivoContainer = document.getElementById("efectivoContainer");
+    const montoInput = document.getElementById("montoRecibidoInput");
+    const vueltoValor = document.getElementById("vueltoValor");
+
+    // Mostrar/Ocultar campo de efectivo al cambiar el select
+    metodoPago.addEventListener("change", () => {
+        efectivoContainer.style.display = (metodoPago.value === "Efectivo") ? "block" : "none";
+    });
+
+    // Calcular vuelto en tiempo real
+    montoInput.addEventListener("input", () => {
+        const total = obtenerTotalNumerico(); // Función que ya debes tener para el total
+        const recibido = parseFloat(montoInput.value) || 0;
+        const vuelto = recibido - total;
+        
+        const contenedorVuelto = document.getElementById("vueltoContainer");
+        if (vuelto >= 0) {
+            vueltoValor.textContent = "$" + vuelto.toLocaleString();
+            contenedorVuelto.style.display = "block";
+        } else {
+            contenedorVuelto.style.display = "none";
+        }
+    });
 });

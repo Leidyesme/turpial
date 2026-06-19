@@ -13,13 +13,22 @@
             <h1 class="profile__title">Mi Perfil</h1>
             <div class="profile__info">
                 <img src="../../../../public/Conny.jpg" class="profile__img img" alt="Foto de perfil">
-                <h2 class="profile__name" id="profileName">Leidy Duarte</h2>
-                <p class="profile__email" id="profileEmail">leidy.duarte@example.com</p>
-                <p class="profile__phone" id="profilePhone">+57 300 123 4567</p>
-                <p class="profile__Estado" id="profileEstado">Activo</p>
+                <h2 class="profile__name" id="profileName"></h2>
+                <p class="profile__email" id="profileEmail"></p>
+                <p class="profile__phone" id="profilePhone"></p>
+                <p class="profile__Estado" id="profileEstado"></p>
             </div>
             <div class="profile__actions">
-                <a href="../orderHistory/orderHistory.html" class="profile__link"><button class="btn btn--beige">Historial de pedidos</button></a>
+            <div id="clientePanel" style="display: none;">
+                <h2>Mi Perfil</h2>
+                <div id="historialCliente"></div>
+                <a href="../devoluciones/crear.html" class="profile__link"><button class="btn btn--rojo">Solicitar devolución</button></a>
+            </div>
+            <div id="adminPanel" style="display: none;">
+                <h2>Panel de Control Admin</h2>
+                <div id="listaDevolucionesAdmin"></div>
+            </div>
+                <a href="../auditoria/auditoria.html" class="profile__link"><button class="btn btn--beige">Historial de Actividades</button></a>
                 <a href="../changePassword/change.html" class="profile__link"><button class="btn btn--marron">Cambiar contraseña</button></a>
                 <a href="../editProfile/editProfile.html" class="profile__link"><button class="btn btn--verde">Editar Perfil</button></a>
                 <button class="btn btn--rojo " id="logoutBtn">Cerrar Sesión</button>
@@ -33,6 +42,6 @@
     </div>
     <script src="../../../js/history/history.js"></script>
     <script src="../../../js/auth/authGuard.js"></script>
-    <script src="./profileController.js"></script>
+    <script type="module" src="./profileController.js"></script>
 </body>
 </html>

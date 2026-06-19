@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Actividades</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="history" style="text-align: center; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+            <img src="../../../../public/turpial.png" class="img" alt="El Turpial Logo" style="width: 120px; margin: 20px auto;">
+            <h1 class="history__title" style="color: var(--text-color); margin-bottom: 20px;">Mi Historial de Actividades</h1>
+            
+            <div id="activityList" style="width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                <!-- Actividades dinámicas -->
+            </div>
+            
+            <button id="backButton" class="btn btn--marron" style="margin-top: 30px; padding: 10px 20px;">Atrás</button>
+        </div>
+    </div>
+    <script src="../../../js/auth/authGuard.js"></script>
+    <script src="./auditoriaController.js"></script>
+</body>
+</html>

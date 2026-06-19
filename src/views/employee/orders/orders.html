@@ -10,7 +10,10 @@
 <body>
     <div class="container">
         <div class="orders">
-            <h1 class="orders__title">Pedidos</h1>
+            <div class="homePage__container">
+                <h1 class="homePage__title">Pedidos</h1>
+                <a href="../../cliente/profile/profile.html"><i class="fa-solid fa-circle-user"></i></a>
+            </div>
             <div class="orders__container">
                 <a href="#" class="orders__serch"><i class="fa-solid fa-magnifying-glass"></i></a>
                 <input type="text" class="orders__text input" id="searchOrder" placeholder="Buscar pedido por nombre">
@@ -22,6 +25,7 @@
             <a href="../newOrder/newOrder.html" class="orders__add"><i class="fa-solid fa-plus"></i></a>
         </div>
     </div>
+    <script type="module" src="./../../cliente/profile/profileController.js"></script>
     <script src="./ordersController.js"></script>
 </body>
 </html>

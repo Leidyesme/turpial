@@ -73,6 +73,7 @@
 
 .fa-circle-user{
     font-size: 25px;
+    color: var(--text-color);
 }
 
 .fa-users{
