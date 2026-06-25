@@ -35,6 +35,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // 2.5 Mostrar cantidad de devoluciones pendientes desde el backend
+    const devolucionesCantElement = document.getElementById("devolucionesCant");
+    if (devolucionesCantElement) {
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+        if (usuarioActivo) {
+            try {
+                const response = await fetch(`http://localhost:8080/turpialJava/devolucion?accion=listarTodas&idUsuario=${usuarioActivo.idUsuario}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === "success" && data.returns) {
+                        const pendingReturns = data.returns.filter(d => d.estadoDevolucion === "Pendiente");
+                        devolucionesCantElement.textContent = `${pendingReturns.length} devoluciones pendientes`;
+                    } else {
+                        devolucionesCantElement.textContent = "0 devoluciones pendientes";
+                    }
+                } else {
+                    devolucionesCantElement.textContent = "0 devoluciones pendientes";
+                }
+            } catch (error) {
+                console.error("Error cargando cantidad de devoluciones:", error);
+                devolucionesCantElement.textContent = "Error al conectar";
+            }
+        }
+    }
+
     // 3. Mostrar pedidos recientes en la tabla
     const tableBody = document.querySelector(".data-table__body");
     if (tableBody) {

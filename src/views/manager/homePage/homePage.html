@@ -47,6 +47,18 @@
                 <p class="homePage__cant"></p>
                 <a href="../products/products.html" class="homePage__products"><button class="homePage__btn">Ver Productos ></button></a>
             </div>
+            
+            <!-- Tarjeta de Gestión de Devoluciones -->
+            <div class="homePage__item--categories" id="devolucionesCard">
+                <div class="homePage___ns" style="background-color: var(--rojo); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </div>
+                <div class="homePage__edit" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center; flex-grow: 1; margin-left: 15px;">
+                    <h3 class="homePage__item-title" style="margin: 0;">Gestión de Devoluciones</h3>
+                    <p class="homePage__cant" id="devolucionesCant" style="margin: 0; color: #666; font-size: 0.9em;">Cargando devoluciones...</p>
+                </div>    
+                <a href="../returns/returns.html" class="homePage__returns"><button class="homePage__btn">Ver Devoluciones ></button></a>
+            </div>
             <h2 class="homePage__orders">Pedidos Recientes</h2>
             <div class="homePage__table">
                 <table class="data-table">
@@ -87,6 +99,7 @@
             </div>
             <h2 class="homePage__orders">Ver todos los pedidos ></h2>
     </div>
+    <script src="../../../js/auth/authGuard.js"></script>
     <script type="module" src="./../../cliente/profile/profileController.js"></script>
     <script type="module" src="./homePageController.js"></script>
 </body>

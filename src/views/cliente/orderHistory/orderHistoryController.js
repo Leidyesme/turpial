@@ -140,7 +140,7 @@ function applyFiltersAndRender() {
             <p class="order-history__status">
                 <strong>Estado:</strong> ${order.status}
             </p>
-            ${order.status === "Entregado" ? `
+            ${(order.status === "Entregado" && usuarioActivo.rol === "ROL-003") ? `
             <div class="order-history__return-section" style="margin-top: 15px; border-top: 1px solid var(--marron); padding-top: 10px; width: 100%;">
                 <button class="btn btn--rojo btn-solicitar-devolucion" data-id="${order.idPedido}" style="width: 100%;">Solicitar Devolución</button>
                 <div class="form-devolucion" id="form-dev-${order.idPedido}" style="display: none; margin-top: 10px; flex-direction: column; gap: 8px; width: 100%;">
@@ -177,7 +177,7 @@ function applyFiltersAndRender() {
                     const response = await fetch("http://localhost:8080/turpialJava/devolucion?accion=solicitar", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ idPedido, motivo })
+                        body: JSON.stringify({ idPedido, motivo, idUsuario: usuarioActivo.idUsuario })
                     });
 
                     if (!response.ok) throw new Error();

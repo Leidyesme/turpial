@@ -19,19 +19,24 @@
                 <p class="profile__Estado" id="profileEstado"></p>
             </div>
             <div class="profile__actions">
-            <div id="clientePanel" style="display: none;">
-                <h2>Mi Perfil</h2>
-                <div id="historialCliente"></div>
-                <a href="../devoluciones/crear.html" class="profile__link"><button class="btn btn--rojo">Solicitar devolución</button></a>
-            </div>
-            <div id="adminPanel" style="display: none;">
-                <h2>Panel de Control Admin</h2>
-                <div id="listaDevolucionesAdmin"></div>
-            </div>
-                <a href="../auditoria/auditoria.html" class="profile__link"><button class="btn btn--beige">Historial de Actividades</button></a>
-                <a href="../changePassword/change.html" class="profile__link"><button class="btn btn--marron">Cambiar contraseña</button></a>
-                <a href="../editProfile/editProfile.html" class="profile__link"><button class="btn btn--verde">Editar Perfil</button></a>
-                <button class="btn btn--rojo " id="logoutBtn">Cerrar Sesión</button>
+                <!-- Panel específico para Clientes (ROL-003) -->
+                <div id="clientePanel" style="display: none;">
+                    <h2>Mi Perfil</h2>
+                    <div id="historialCliente"></div>
+                    <a href="../returns/returns.html" class="profile__link" id="solicitarDevolucionLink"><button class="btn btn--rojo">Solicitar devolución</button></a>
+                </div>
+                
+                <!-- Panel específico para Administradores (ROL-001) -->
+                <div id="adminPanel" style="display: none; width: 100%;">
+                    <a href="../../manager/returns/returns.html" class="profile__link" id="adminReturnsLink" style="width: 100%; display: block;"><button class="btn btn--rojo" style="width: 100%;">Gestionar Devoluciones</button></a>
+                </div>
+
+                <!-- Enlaces controlados dinámicamente por JS según el rol del usuario -->
+                <a href="../orderHistory/orderHistory.html" class="profile__link" id="orderHistoryLink"><button class="btn btn--verde" id="orderHistoryBtn">Historial de Pedidos</button></a>
+                <a href="../auditoria/auditoria.html" class="profile__link" id="activityHistoryLink"><button class="btn btn--beige">Historial de Actividades</button></a>
+                <a href="../changePassword/change.html" class="profile__link" id="changePasswordLink"><button class="btn btn--marron">Cambiar contraseña</button></a>
+                <a href="../editProfile/editProfile.html" class="profile__link" id="editProfileLink"><button class="btn btn--verde">Editar Perfil</button></a>
+                <button class="btn btn--rojo" id="logoutBtn">Cerrar Sesión</button>
             </div>
             <div class="botones--links">
                 <a href="../categories/categories.html" class="profile__link link"><i class="fa-solid fa-house"></i></a>
