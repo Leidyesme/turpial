@@ -22,6 +22,9 @@ export async function updateEmployee(id) {
         const newEmail = prompt("Nuevo correo", employeeData.email);
         if (!newEmail) return;
 
+        const newPhone = prompt("Nuevo teléfono", employeeData.phone);
+        if (!newPhone) return;
+
         let currentRoleFriendly = employeeData.idRol === "ROL-001" ? "Administrador" : "Empleado";
         const newRole = prompt("Nuevo cargo (Administrador / Empleado)", currentRoleFriendly);
         if (!newRole) return;
@@ -33,6 +36,7 @@ export async function updateEmployee(id) {
             id: id,
             name: newName,
             email: newEmail,
+            phone: newPhone,
             role: newRole,
             status: newStatus
         };

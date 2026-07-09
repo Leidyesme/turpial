@@ -80,6 +80,7 @@ function configurarVisibilidadSegunRol(usuario) {
         
         if (orderHistoryLink) {
             orderHistoryLink.style.display = "block";
+            orderHistoryLink.href = "../../manager/orders/orders.html";
             if (orderHistoryBtn) orderHistoryBtn.textContent = "Historial General de Pedidos";
         }
         if (activityHistoryLink) activityHistoryLink.style.display = "none";
@@ -106,6 +107,7 @@ function configurarVisibilidadSegunRol(usuario) {
         
         if (orderHistoryLink) {
             orderHistoryLink.style.display = "block";
+            orderHistoryLink.href = "../orderHistory/orderHistory.html";
             if (orderHistoryBtn) orderHistoryBtn.textContent = "Historial de Pedidos";
         }
         if (activityHistoryLink) activityHistoryLink.style.display = "block";
