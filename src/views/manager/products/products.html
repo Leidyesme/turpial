@@ -45,6 +45,27 @@
         </div>
     </div>
 
+    <!-- Modal para Editar Producto -->
+    <div id="editProductModal" class="modal" style="display: none;">
+        <div class="modal-content section" style="width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box;">
+            <h2 style="color: var(--text-color); margin-bottom: 15px; text-align: center;">Editar Producto</h2>
+            <form id="editProductForm" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <input type="hidden" id="editProdId">
+                <input type="text" id="editProdName" class="input" placeholder="Nombre de Producto" required>
+                <input type="number" id="editProdPrice" class="input" placeholder="Precio" min="1" required>
+                <input type="number" id="editProdStock" class="input" placeholder="Stock" min="0" required>
+                <select id="editProdCategory" class="input" required>
+                    <option value="">Seleccione Categoría</option>
+                </select>
+                <input type="text" id="editProdImage" class="input" placeholder="Ruta de Imagen (Ej: /breakfast/breakfast1.png)">
+                <div class="modal-actions" style="display: flex; justify-content: space-between; margin-top: 15px; width: 100%; gap: 10px;">
+                    <button type="button" id="cancelEditProdBtn" class="btn btn--rojo" style="padding: 10px 20px; flex: 1;">Cancelar</button>
+                    <button type="submit" class="btn btn--verde" style="padding: 10px 20px; flex: 1;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../../../js/auth/authGuard.js"></script>
     <script type="module" src="./productsController.js"></script>
 </body>

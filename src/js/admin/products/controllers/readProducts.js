@@ -63,10 +63,12 @@ function renderProducts(products) {
         );
 
 
-        // Centralizar rutas de imágenes para compatibilidad con Vite (/nombre_imagen.png) y file://
+        // Centralizar rutas de imágenes de forma robusta para compatibilidad con Live Server, Vite y file://
         let imagePath = "/turpial.png";
         if (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "") {
-            if (window.location.protocol === "file:") {
+            if (product.image.startsWith("http://") || product.image.startsWith("https://")) {
+                imagePath = product.image;
+            } else {
                 let cleanPath = product.image;
                 if (cleanPath.includes("public/")) {
                     cleanPath = cleanPath.substring(cleanPath.indexOf("public/") + 7);
@@ -74,12 +76,8 @@ function renderProducts(products) {
                 if (cleanPath.startsWith("/")) {
                     cleanPath = cleanPath.substring(1);
                 }
+                // Todas las vistas HTML están a 4 niveles de profundidad de la raíz (src/views/*/*/*.html)
                 imagePath = "../../../../public/" + cleanPath;
-            } else {
-                imagePath = product.image.replace(/^.*\/public\//, "/");
-                if (!imagePath.startsWith("/")) {
-                    imagePath = "/" + imagePath;
-                }
             }
         }
 

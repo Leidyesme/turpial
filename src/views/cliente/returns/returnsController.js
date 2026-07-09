@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderReturns();
 });
 
+/**
+ * Configura el formulario para solicitar una devolución de pedido.
+ * Solo utilizable para clientes. Envía idUsuario del cliente en la petición.
+ */
 function setupReturns() {
     const form = document.querySelector("#returnsForm");
     if (!form) return;
@@ -18,6 +22,9 @@ function setupReturns() {
             return;
         }
 
+        const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+        const idUsuario = usuarioActivo ? usuarioActivo.idUsuario : null;
+
         try {
             const response = await fetch("http://localhost:8080/turpialJava/devolucion?accion=solicitar", {
                 method: "POST",
@@ -26,7 +33,8 @@ function setupReturns() {
                 },
                 body: JSON.stringify({
                     idPedido: pedido,
-                    motivo: motivo
+                    motivo: motivo,
+                    idUsuario: idUsuario
                 })
             });
 
@@ -35,7 +43,6 @@ function setupReturns() {
             const data = await response.json();
 
             if (data.status === "success") {
-                const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
                 const email = usuarioActivo ? usuarioActivo.email : "Cliente";
                 if (typeof guardarHistorial === "function") {
                     guardarHistorial(email, "Usuario", `Registró devolución para pedido ${pedido}`);
@@ -54,6 +61,10 @@ function setupReturns() {
     });
 }
 
+/**
+ * Renderiza en la interfaz de usuario el listado de las devoluciones que ha solicitado.
+ * Muestra el estado del proceso (incluyendo 'Pendiente') y la respuesta dada por el administrador si existe.
+ */
 async function renderReturns() {
     const container = document.querySelector("#listaDevoluciones");
     if (!container) return;
@@ -74,11 +85,16 @@ async function renderReturns() {
         if (data.status === "success" && data.returns && data.returns.length > 0) {
             data.returns.forEach(devolucion => {
                 container.innerHTML += `
-                    <div class="section" style="width: 100%; max-width: 400px; margin: 10px auto; text-align: left; padding: 15px; box-sizing: border-box; min-height: auto;">
+                    <div class="section" style="width: 100%; max-width: 400px; margin: 10px auto; text-align: left; padding: 15px; box-sizing: border-box; min-height: auto; border: 1px solid var(--marron);">
                         <h3 style="margin: 0; color: var(--marron);">Solicitud: ${devolucion.idDevolucion}</h3>
                         <p style="margin: 5px 0;"><strong>Pedido:</strong> ${devolucion.idPedido}</p>
                         <p style="margin: 5px 0;"><strong>Motivo:</strong> ${devolucion.motivo}</p>
                         <p style="margin: 5px 0;"><strong>Fecha:</strong> ${devolucion.fechaSolicitud}</p>
+                        ${devolucion.respuestaAdmin ? `
+                            <p style="margin: 10px 0 5px 0; padding: 8px; background-color: var(--beige); border-radius: 8px; border-left: 4px solid var(--marron); font-size: 0.95em;">
+                                <strong>Respuesta del Administrador:</strong> ${devolucion.respuestaAdmin}
+                            </p>
+                        ` : ''}
                         <button class="btn ${devolucion.estadoDevolucion === 'Aprobada' ? 'btn--verde' : (devolucion.estadoDevolucion === 'Rechazada' ? 'btn--rojo' : 'btn--beige')}" style="width: 100%; margin-top: 10px; cursor: default;">
                             ${devolucion.estadoDevolucion}
                         </button>

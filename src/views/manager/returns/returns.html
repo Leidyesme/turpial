@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Devoluciones - Admin</title>
+    <link rel="stylesheet" href="../../../../style/main.css">
+    <script src="https://kit.fontawesome.com/3adbf84a23.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="returns-admin" style="max-width: 600px; margin: 0 auto; padding: 20px; box-sizing: border-box;">
+            <!-- Logo superior de marca -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="../../../../public/turpial.png" alt="Logo El Turpial" style="width: 100px; height: auto;">
+            </div>
+            
+            <h1 class="returns__title" style="text-align: center; margin-bottom: 30px;">Gestión de Devoluciones</h1>
+            
+            <!-- Bloque 1: Solicitudes Pendientes (Prioritario) -->
+            <h2 class="section-title" style="color: var(--marron); text-align: left; border-bottom: 2px solid var(--marron); padding-bottom: 5px; margin-top: 20px;">Solicitudes Pendientes</h2>
+            <div id="devolucionesPendientes" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 35px; width: 100%;">
+                <!-- Cargado dinámicamente desde returnsController.js -->
+            </div>
+
+            <!-- Bloque 2: Solicitudes Procesadas (Historial) -->
+            <h2 class="section-title" style="color: var(--marron); text-align: left; border-bottom: 2px solid var(--marron); padding-bottom: 5px; margin-top: 10px;">Historial Procesadas</h2>
+            <div id="devolucionesProcesadas" style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                <!-- Cargado dinámicamente desde returnsController.js -->
+            </div>
+
+            <!-- Botón de retorno al inicio -->
+            <button id="backButton" class="btn btn--marron" style="width: 100%; margin-top: 30px; padding: 12px 0;">Atrás</button>
+        </div>
+    </div>
+    <script src="../../../js/auth/authGuard.js"></script>
+    <script src="../../../js/history/history.js"></script>
+    <script src="./returnsController.js"></script>
+</body>
+</html>

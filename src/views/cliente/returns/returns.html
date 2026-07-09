@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devoluciones</title>
     <link rel="stylesheet" href="../../../../style/main.css">
-    <script src="./returnsController.js"></script>
 </head>
 <body>
     <div class="container"> 
@@ -15,15 +14,17 @@
             </div> 
             <h1 class="returns__title"> Registro de devoluciones </h1> 
             <form id="returnsForm" class="returns__form" style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 400px; margin: 0 auto;"> 
-                <input type="text" id="pedido" class="input" placeholder="ID Pedido" required style="width: 100%;"> 
+                <input type="text" id="pedido" class="input" placeholder="ID Pedido: PED-001" required style="width: 100%;"> 
                 <textarea id="motivo" class="input" placeholder="Motivo devolución" required style="width: 100%; min-height: 80px; box-sizing: border-box;"></textarea> 
                 <button type="submit" class="btn btn--rojo" style="width: 100%;"> Registrar devolución </button> 
             </form> 
             <div id="listaDevoluciones"> 
-
+                
             </div> 
         </div> 
     </div> 
-    <script src="../../../js/history/history.js"></script> <script src="./returnsController.js"></script>
+    <script src="../../../js/auth/authGuard.js"></script>
+    <script src="../../../js/history/history.js"></script>
+    <script src="./returnsController.js"></script>
 </body>
 </html>

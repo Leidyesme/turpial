@@ -23,31 +23,91 @@ export function setupAddProduct(loadProducts) {
         modal.style.display = "none";
     });
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
+        // Evitar la recarga automática de la página al enviar el formulario
         e.preventDefault();
 
+        // Capturar y limpiar los datos ingresados
         const name = document.querySelector("#prodName").value.trim();
-        const price = Number(document.querySelector("#prodPrice").value);
-        const stock = Number(document.querySelector("#prodStock").value);
-        const category = categorySelect.options[categorySelect.selectedIndex].textContent;
+        const priceVal = document.querySelector("#prodPrice").value.trim();
+        const stockVal = document.querySelector("#prodStock").value.trim();
+        const category = categorySelect.value; // ID de la categoría (ej: CAT-001)
         const image = document.querySelector("#prodImage").value.trim();
 
-        const newProduct = {
-            id: generateId(),
+        // 1. Validar que el nombre no esté vacío
+        if (!name) {
+            alert("El nombre del producto es obligatorio.");
+            return;
+        }
+
+        // 2. Validar precio positivo
+        if (!priceVal) {
+            alert("El precio del producto es obligatorio.");
+            return;
+        }
+        const price = Number(priceVal);
+        if (isNaN(price) || price <= 0) {
+            alert("El precio debe ser un número mayor a cero.");
+            return;
+        }
+
+        // 3. Validar stock entero no negativo
+        if (!stockVal) {
+            alert("El stock del producto es obligatorio.");
+            return;
+        }
+        const stock = Number(stockVal);
+        if (isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
+            alert("El stock debe ser un número entero mayor o igual a cero.");
+            return;
+        }
+
+        // 4. Validar que se haya seleccionado una categoría
+        if (!category || category === "") {
+            alert("Debe seleccionar una categoría válida.");
+            return;
+        }
+
+        // Estructurar el JSON que el servlet de Java espera (name, price, stock, category)
+        const payload = {
             name,
             price,
             stock,
             category,
-            image,
-            status: stock > 0 ? "Disponible" : "Agotado"
+            image
         };
 
-        const products = getProducts();
-        products.push(newProduct);
-        saveProducts(products);
+        try {
+            // Imprimir logs en consola del navegador para depuración
+            console.log("[DEBUG - createProduct] Enviando petición POST a servlet con payload:", payload);
 
-        modal.style.display = "none";
-        loadProducts();
+            // Realizar la petición POST asíncrona hacia el servlet de Java
+            const response = await fetch("http://localhost:8080/turpialJava/producto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor HTTP: Status " + response.status);
+            }
+
+            const data = await response.json();
+            
+            // Si el backend guardó con éxito
+            if (data.status === "success") {
+                alert("¡Producto registrado con éxito en la base de datos MySQL!");
+                modal.style.display = "none";
+                await loadProducts(); // Recargar el catálogo dinámicamente
+            } else {
+                alert("Error al registrar en la base de datos: " + data.message);
+            }
+        } catch (error) {
+            console.error("Error en la petición POST hacia el Servlet:", error);
+            alert("No se pudo conectar con el servidor. Verifica que Tomcat y MySQL estén activos.");
+        }
     });
 }
 

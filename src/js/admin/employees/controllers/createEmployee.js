@@ -28,12 +28,20 @@ export function setupAddEmployee(loadEmployees) {
             const payload = {
             name: document.querySelector("#employeeName").value.trim(),
             email: document.querySelector("#employeeEmail").value.trim(),
+            phone: document.querySelector("#employeePhone").value.trim(),
+            direccion: document.querySelector("#employeeAddress").value.trim(),
+            password: document.querySelector("#employeePassword").value.trim(),
             role: document.querySelector("#employeeRole").value
         };
 
         // Validación básica
-        if (!payload.name || !payload.email || !payload.role) {
+        if (!payload.name || !payload.email || !payload.phone || !payload.direccion || !payload.password || !payload.role) {
             alert("Todos los campos son obligatorios");
+            return;
+        }
+
+        if (payload.password.length < 6) {
+            alert("La contraseña debe tener al menos 6 caracteres");
             return;
         }
 
