@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded",
 
         setupOrderType();
 
+        setupCancelBtn();
+
+        setupStockSync();
+
     }
 );
 
@@ -44,7 +48,7 @@ async function loadProducts() {
                 product.idProducto;
 
             option.textContent =
-                `${product.nombre} - $${product.precio}`;
+                `${product.nombre} - $${product.precio} (Stock: ${product.stock})`;
 
             select.appendChild(
                 option
@@ -74,16 +78,72 @@ function setupAddProduct() {
         );
 
 
-    addProductBtn.addEventListener("click", () => {
+    addProductBtn.addEventListener("click", async () => {
     
-        addProduct();
+        await addProduct();
 
     });
 
 }
 
+async function getRealTimeStock(productId) {
+    try {
+        const response = await fetch("http://localhost:8080/turpialJava/producto");
+        if (!response.ok) {
+            throw new Error("Error obteniendo stock en tiempo real del servidor");
+        }
+        const data = await response.json();
+        availableProducts = data;
+        const product = data.find(p => p.idProducto === productId);
+        return product ? product.stock : 0;
+    } catch (error) {
+        console.error("Error al consultar stock en tiempo real:", error);
+        return null;
+    }
+}
 
-function addProduct() {
+function setupStockSync() {
+    const select = document.querySelector("#productSelect");
+    const stockContainer = document.querySelector("#stockDisplayContainer");
+
+    if (select && stockContainer) {
+        select.addEventListener("change", async () => {
+            const productId = select.value;
+            if (!productId) {
+                stockContainer.textContent = "";
+                return;
+            }
+
+            stockContainer.textContent = "Consultando stock en tiempo real...";
+            const stock = await getRealTimeStock(productId);
+            if (stock !== null) {
+                stockContainer.textContent = `Stock disponible en tiempo real: ${stock}`;
+                
+                const option = select.querySelector(`option[value="${productId}"]`);
+                if (option) {
+                    const product = availableProducts.find(p => p.idProducto === productId);
+                    if (product) {
+                        option.textContent = `${product.nombre} - $${product.precio} (Stock: ${stock})`;
+                    }
+                }
+            } else {
+                stockContainer.textContent = "Error al consultar el stock.";
+            }
+        });
+    }
+}
+
+function setupCancelBtn() {
+    const cancelBtn = document.querySelector("#cancelBtn");
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+            window.location.href = "../orders/orders.html";
+        });
+    }
+}
+
+
+async function addProduct() {
 
     const productId =
         document.querySelector(
@@ -110,6 +170,12 @@ function addProduct() {
         return;
     }
 
+    const freshStock = await getRealTimeStock(productId);
+    if (freshStock === null) {
+        alert("Error al validar el stock disponible en tiempo real.");
+        return;
+    }
+
     const selectedProduct =
         availableProducts.find(
             product =>
@@ -123,6 +189,13 @@ function addProduct() {
     }
 
     const existingProduct = products.find(p => p.idProducto === selectedProduct.idProducto);
+    const requestedQuantity = (existingProduct ? existingProduct.quantity : 0) + quantity;
+
+    if (requestedQuantity > freshStock) {
+        alert(`No hay suficiente stock. Disponible: ${freshStock}, Solicitado: ${requestedQuantity}`);
+        return;
+    }
+
     if (existingProduct) {
         existingProduct.quantity += quantity;
     } else {
@@ -148,6 +221,11 @@ function addProduct() {
     // Reset fields
     document.querySelector("#productSelect").value = "";
     document.querySelector("#productQuantity").value = "1";
+    
+    const stockContainer = document.querySelector("#stockDisplayContainer");
+    if (stockContainer) {
+        stockContainer.textContent = "";
+    }
 
     renderProducts();
 }

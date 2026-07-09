@@ -47,8 +47,17 @@ async function loadOrderInfo() {
 
     // Establecer el valor seleccionado en el select dropdown con el estado local inicial
     const statusSelect = document.querySelector("#statusSelect");
+    const updateStatusBtn = document.querySelector("#updateStatusBtn");
     if (statusSelect) {
         statusSelect.value = currentOrder.status;
+    }
+
+    if (currentOrder.status === "Entregado") {
+        if (statusSelect) statusSelect.disabled = true;
+        if (updateStatusBtn) updateStatusBtn.disabled = true;
+    } else {
+        if (statusSelect) statusSelect.disabled = false;
+        if (updateStatusBtn) updateStatusBtn.disabled = false;
     }
 
     // CARGAR DETALLES EN TIEMPO REAL DESDE LA BASE DE DATOS (MÓDULO DE PRODUCTOS)
@@ -73,6 +82,14 @@ async function loadOrderInfo() {
         
         if (statusSelect) {
             statusSelect.value = detailedOrder.estado;
+        }
+
+        if (detailedOrder.estado === "Entregado") {
+            if (statusSelect) statusSelect.disabled = true;
+            if (updateStatusBtn) updateStatusBtn.disabled = true;
+        } else {
+            if (statusSelect) statusSelect.disabled = false;
+            if (updateStatusBtn) updateStatusBtn.disabled = false;
         }
 
         // Sincronizar en el objeto local

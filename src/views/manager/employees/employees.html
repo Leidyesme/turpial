@@ -29,11 +29,30 @@
                     class="input"
                     placeholder="Correo"
                     required>
+                <input
+                    type="tel"
+                    id="employeePhone"
+                    class="input"
+                    placeholder="Teléfono (ej. 3001234567)"
+                    required>
+                <input
+                    type="text"
+                    id="employeeAddress"
+                    class="input"
+                    placeholder="Dirección"
+                    required>
+                <input
+                    type="password"
+                    id="employeePassword"
+                    class="input"
+                    placeholder="Contraseña (mín. 6 caracteres)"
+                    required>
                 <select
                     id="employeeRole"
                     class="input"
                     required>
                     <option value="ROL-002">Empleado</option>
+                    <option value="ROL-001">Administrador</option>
                 </select>
                 <button type="submit" class="btn btn--verde">Agregar empleado</button>
             </form>
