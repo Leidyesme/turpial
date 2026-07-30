@@ -21,12 +21,19 @@
                     <!-- Aquí se mostrarán los productos del pedido -->
                 </div>
                 <div class="orderinfo__status-update">
-                    <label for="statusSelect" class="orderinfo__status-label">Cambiar Estado:</label>
+                    <label for="statusSelect" class="orderinfo__status-label">Cambiar Estado Cocina:</label>
                     <select id="statusSelect" class="input orderinfo__status-select">
                         <option value="En preparación">En preparación</option>
                         <option value="Listo">Listo</option>
                         <option value="En espera">En espera</option>
                         <option value="Entregado">Entregado</option>
+                    </select>
+                </div>
+                <div class="orderinfo__status-update" style="margin-top: 10px;">
+                    <label for="paymentSelect" class="orderinfo__status-label">Estado de Pago:</label>
+                    <select id="paymentSelect" class="input orderinfo__status-select">
+                        <option value="Sin pagar">Sin pagar</option>
+                        <option value="Pagado">Pagado</option>
                     </select>
                 </div>
                 <button class="btn btn--verde" id="updateStatusBtn"> Actualizar Estado</button>

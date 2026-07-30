@@ -20,11 +20,9 @@ export function deleteProduct(id) {
         getProducts();
 
 
-    products =
-        products.filter(product =>
-
-            product.id !== id
-        );
+    products = products.filter(product =>
+        String(product.id) !== String(id)
+    );
 
 
     saveProducts(products);

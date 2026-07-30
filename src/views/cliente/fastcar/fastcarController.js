@@ -41,7 +41,47 @@ const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
 
 renderCart();
 initAddressSelection();
+initDeliveryTypeNotice();
 
+function initDeliveryTypeNotice() {
+    if (!tipoPedidoSelect) return;
+    
+    let noticeEl = document.querySelector("#paymentNotice");
+    if (!noticeEl) {
+        noticeEl = document.createElement("p");
+        noticeEl.id = "paymentNotice";
+        noticeEl.classList.add("product-stock-display");
+        if (tipoPedidoSelect.parentNode) {
+            tipoPedidoSelect.parentNode.insertBefore(noticeEl, tipoPedidoSelect.nextSibling);
+        }
+    }
+
+    const updateNotice = () => {
+        const val = tipoPedidoSelect.value;
+        if (val === "Para consumir aquí") {
+            if (mesaContainer) mesaContainer.style.display = "block";
+            if (deliveryAddressContainer) deliveryAddressContainer.style.display = "none";
+            noticeEl.textContent = "Para consumir en el local: Pagas al finalizar tu consumo.";
+            noticeEl.classList.remove("product-stock--disponible");
+            noticeEl.classList.add("product-stock--agotado");
+        } else if (val === "Para recoger") {
+            if (mesaContainer) mesaContainer.style.display = "none";
+            if (deliveryAddressContainer) deliveryAddressContainer.style.display = "none";
+            noticeEl.textContent = "Para llevar / recoger: Pagas al realizar la orden.";
+            noticeEl.classList.remove("product-stock--agotado");
+            noticeEl.classList.add("product-stock--disponible");
+        } else {
+            if (mesaContainer) mesaContainer.style.display = "none";
+            if (deliveryAddressContainer) deliveryAddressContainer.style.display = "block";
+            noticeEl.textContent = "A domicilio: Pagas al realizar la orden.";
+            noticeEl.classList.remove("product-stock--agotado");
+            noticeEl.classList.add("product-stock--disponible");
+        }
+    };
+
+    tipoPedidoSelect.addEventListener("change", updateNotice);
+    updateNotice();
+}
 
 function initAddressSelection() {
     if (!usuarioActivo) return;
@@ -256,22 +296,28 @@ checkoutButton.addEventListener("click", async () => {
         return;
     }
 
-    // Calcular el total monetario del pedido multiplicando el precio por la cantidad
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Preparar el cuerpo de la petición con la estructura esperada por HistorialServlet
-    const payload = {
-    idUsuario: usuarioActivo.idUsuario,
-    total: total,
-    tipoEntrega: tipoPedidoSelect.value, // <--- NUEVO
-    numeroMesa: numeroMesaInput.value,    // <--- NUEVO
-    direccion: (tipoPedidoSelect.value === "A domicilio") ? selectedAddress : "N/A", // <--- NUEVO
-    products: cart.map(item => ({
+    const mappedProducts = cart.map(item => ({
+        idProducto: item.idProducto || item.id || "",
+        id: item.id || item.idProducto || "",
         name: item.name,
         price: item.price,
         quantity: item.quantity
-    }))
-};
+    }));
+
+    const estadoPagoCalculado = (tipoPedidoSelect.value === "Para consumir aquí") ? "Sin pagar" : "Pagado";
+
+    const payload = {
+        idUsuario: usuarioActivo.idUsuario,
+        total: total,
+        tipoEntrega: tipoPedidoSelect.value,
+        estadoPago: estadoPagoCalculado,
+        numeroMesa: numeroMesaInput ? numeroMesaInput.value : null,
+        direccion: (tipoPedidoSelect.value === "A domicilio") ? selectedAddress : "N/A",
+        products: mappedProducts,
+        productos: mappedProducts
+    };
 
     try {
         // Enviar el pedido al backend por medio de fetch
@@ -294,43 +340,16 @@ checkoutButton.addEventListener("click", async () => {
         // Validar si la inserción en la base de datos fue exitosa
         if (data.status === "success") {
             // Guardar historial local descriptivo
-            guardarHistorial(usuarioActivo.email, "Usuario", `Realizó un pedido por $${total}`);
+            if (typeof guardarHistorial === "function") {
+                guardarHistorial(usuarioActivo.email, "Usuario", `Realizó un pedido por $${total}`);
+            }
             
-            // Guardar pedido en local orders para que le aparezca al empleado en la simulación local
-            const localOrders = JSON.parse(localStorage.getItem("orders")) || [];
-            localOrders.push({
-                clientName: usuarioActivo.name,
-                address: selectedAddress,
-                date: new Date().toLocaleString(),
-                status: "En proceso",
-                total: total,
-                products: cart.map(item => ({
-                    name: item.name,
-                    price: item.price,
-                    quantity: item.quantity
-                }))
-            });
-            localStorage.setItem("orders", JSON.stringify(localOrders));
-
-            // Decrementar stock de los productos comprados en localStorage
-            const productsDb = JSON.parse(localStorage.getItem("products")) || [];
-            cart.forEach(item => {
-                const matchedProduct = productsDb.find(p => p.name === item.name);
-                if (matchedProduct) {
-                    let currentStock = parseInt(matchedProduct.stock) || 0;
-                    currentStock = Math.max(0, currentStock - item.quantity);
-                    matchedProduct.stock = currentStock;
-                    matchedProduct.status = currentStock > 0 ? "Disponible" : "Agotado";
-                }
-            });
-            localStorage.setItem("products", JSON.stringify(productsDb));
-
-            // Vaciar el carrito en localStorage
+            // Vaciar el carrito en localStorage tras confirmación del servidor
             localStorage.removeItem("cart");
             
             alert("Pedido realizado exitosamente y registrado en la base de datos.");
             
-            // Recargar la página actual
+            // Recargar la página para reflejar el estado limpio
             location.reload();
         } else {
             // Alertar del fallo retornado por el backend
@@ -342,53 +361,41 @@ checkoutButton.addEventListener("click", async () => {
         alert("No se pudo conectar con el servidor de El Turpial. Revisa que Tomcat esté activo.");
     }
 });
+
 function setupPedidoLogic() {
-    // Lógica para mostrar secciones según tipo
-    tipoPedidoSelect.addEventListener("change", () => {
-        const val = tipoPedidoSelect.value;
-        mesaContainer.style.display = (val === "Para consumir aquí") ? "block" : "none";
-        deliveryAddressContainer.style.display = (val === "A domicilio") ? "block" : "none";
-    });
+    if (tipoPedidoSelect) {
+        tipoPedidoSelect.addEventListener("change", () => {
+            const val = tipoPedidoSelect.value;
+            if (mesaContainer) mesaContainer.style.display = (val === "Para consumir aquí") ? "block" : "none";
+            if (deliveryAddressContainer) deliveryAddressContainer.style.display = (val === "A domicilio") ? "block" : "none";
+        });
+    }
 
-    // Lógica para calcular vuelto
-    montoRecibidoInput.addEventListener("input", () => {
-        const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        const recibido = parseFloat(montoRecibidoInput.value) || 0;
-        
-        if (recibido >= total) {
-            vueltoContainer.style.display = "block";
-            vueltoValor.textContent = `$${(recibido - total).toLocaleString()}`;
-        } else {
-            vueltoContainer.style.display = "none";
-        }
-    });
-}
-// Llama a la función al inicio
-setupPedidoLogic();
-
-document.addEventListener("DOMContentLoaded", () => {
     const metodoPago = document.getElementById("metodoPago");
     const efectivoContainer = document.getElementById("efectivoContainer");
-    const montoInput = document.getElementById("montoRecibidoInput");
-    const vueltoValor = document.getElementById("vueltoValor");
+    if (metodoPago && efectivoContainer) {
+        metodoPago.addEventListener("change", () => {
+            efectivoContainer.style.display = (metodoPago.value === "Efectivo") ? "block" : "none";
+        });
+    }
 
-    // Mostrar/Ocultar campo de efectivo al cambiar el select
-    metodoPago.addEventListener("change", () => {
-        efectivoContainer.style.display = (metodoPago.value === "Efectivo") ? "block" : "none";
-    });
+    if (montoRecibidoInput) {
+        montoRecibidoInput.addEventListener("input", () => {
+            const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            const recibido = parseFloat(montoRecibidoInput.value) || 0;
+            const vuelto = recibido - total;
+            
+            if (vueltoContainer && vueltoValor) {
+                if (recibido >= total && total > 0) {
+                    vueltoContainer.style.display = "block";
+                    vueltoValor.textContent = `$${vuelto.toLocaleString()}`;
+                } else {
+                    vueltoContainer.style.display = "none";
+                }
+            }
+        });
+    }
+}
 
-    // Calcular vuelto en tiempo real
-    montoInput.addEventListener("input", () => {
-        const total = obtenerTotalNumerico(); // Función que ya debes tener para el total
-        const recibido = parseFloat(montoInput.value) || 0;
-        const vuelto = recibido - total;
-        
-        const contenedorVuelto = document.getElementById("vueltoContainer");
-        if (vuelto >= 0) {
-            vueltoValor.textContent = "$" + vuelto.toLocaleString();
-            contenedorVuelto.style.display = "block";
-        } else {
-            contenedorVuelto.style.display = "none";
-        }
-    });
-});
+// Inicializar eventos de pedidos
+setupPedidoLogic();

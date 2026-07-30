@@ -34,7 +34,8 @@ loginForm.addEventListener("submit", async (e) => {
             rol: data.usuario.idRol    // Creamos la propiedad 'rol' con el valor de 'idRol'
         };
 
-        // Guardamos este objeto limpio
+        // Guardamos este objeto en sessionStorage (para pestañas independientes) y en localStorage
+        sessionStorage.setItem("usuarioActivo", JSON.stringify(usuarioGuardar));
         localStorage.setItem("usuarioActivo", JSON.stringify(usuarioGuardar));
             
             // Guardar historial local

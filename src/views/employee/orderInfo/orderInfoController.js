@@ -47,17 +47,19 @@ async function loadOrderInfo() {
 
     // Establecer el valor seleccionado en el select dropdown con el estado local inicial
     const statusSelect = document.querySelector("#statusSelect");
+    const paymentSelect = document.querySelector("#paymentSelect");
     const updateStatusBtn = document.querySelector("#updateStatusBtn");
     if (statusSelect) {
         statusSelect.value = currentOrder.status;
     }
+    if (paymentSelect) {
+        paymentSelect.value = currentOrder.estadoPago || "Sin pagar";
+    }
 
     if (currentOrder.status === "Entregado") {
         if (statusSelect) statusSelect.disabled = true;
-        if (updateStatusBtn) updateStatusBtn.disabled = true;
     } else {
         if (statusSelect) statusSelect.disabled = false;
-        if (updateStatusBtn) updateStatusBtn.disabled = false;
     }
 
     // CARGAR DETALLES EN TIEMPO REAL DESDE LA BASE DE DATOS (MÓDULO DE PRODUCTOS)
@@ -76,7 +78,12 @@ async function loadOrderInfo() {
         orderDate.textContent = `Fecha: ${detailedOrder.fechaPedido}`;
         orderStatus.textContent = `Estado: ${detailedOrder.estado}`;
         if (orderAddress) {
-            orderAddress.textContent = `Dirección: ${detailedOrder.direccionEntrega && detailedOrder.direccionEntrega !== "null" ? detailedOrder.direccionEntrega : "No especificada"}`;
+            if (detailedOrder.tipoEntrega === "A domicilio") {
+                orderAddress.style.display = "block";
+                orderAddress.textContent = `Dirección: ${detailedOrder.direccionEntrega && detailedOrder.direccionEntrega !== "null" ? detailedOrder.direccionEntrega : "No especificada"}`;
+            } else {
+                orderAddress.style.display = "none";
+            }
         }
         orderTotal.textContent = `Total: $${Number(detailedOrder.total).toLocaleString()}`;
         
@@ -84,38 +91,38 @@ async function loadOrderInfo() {
             statusSelect.value = detailedOrder.estado;
         }
 
+        if (paymentSelect) {
+            const isPagado = (detailedOrder.estadoPago === "Pagado");
+            paymentSelect.value = detailedOrder.estadoPago || "Sin pagar";
+            paymentSelect.disabled = isPagado;
+        }
+
         if (detailedOrder.estado === "Entregado") {
             if (statusSelect) statusSelect.disabled = true;
-            if (updateStatusBtn) updateStatusBtn.disabled = true;
         } else {
             if (statusSelect) statusSelect.disabled = false;
-            if (updateStatusBtn) updateStatusBtn.disabled = false;
         }
 
         // Sincronizar en el objeto local
         currentOrder.status = detailedOrder.estado;
+        currentOrder.estadoPago = detailedOrder.estadoPago || "Sin pagar";
         currentOrder.clientName = detailedOrder.nombreClienteOpcional;
         currentOrder.address = detailedOrder.direccionEntrega && detailedOrder.direccionEntrega !== "null" ? detailedOrder.direccionEntrega : "No especificada";
         currentOrder.total = Number(detailedOrder.total);
 
-        // Renderizar los productos reales del detallepedido
+        // Limpiar el contenedor antes de renderizar los elementos
         orderProducts.innerHTML = "";
-        const products = detailedOrder.products || [];
 
-        if (products.length === 0) {
-            orderProducts.innerHTML = "<p>No hay productos registrados en este pedido.</p>";
+        if (!detailedOrder.products || detailedOrder.products.length === 0) {
+            orderProducts.innerHTML = "<p>No hay productos registrados en el detalle del pedido.</p>";
             return;
         }
 
-        products.forEach((product) => {
+        // Renderizar cada producto recuperado del backend
+        detailedOrder.products.forEach(product => {
             const productCard = document.createElement("div");
-            productCard.classList.add("orderinfo__product");
-            productCard.style.padding = "10px";
+            productCard.style.padding = "8px";
             productCard.style.borderBottom = "1px solid #eee";
-            productCard.style.display = "flex";
-            productCard.style.flexDirection = "column";
-            productCard.style.gap = "4px";
-
             productCard.innerHTML = `
                 <p style="margin: 0; font-weight: bold;">${product.name}</p>
                 <div style="display: flex; justify-content: space-between; font-size: 13px; color: #555;">
@@ -134,53 +141,34 @@ async function loadOrderInfo() {
 
 
 function setupButtons() {
-
-    // BOTÓN VOLVER
-    const backBtn =
-        document.querySelector("#backBtn");
-
-
+    const backBtn = document.querySelector("#backBtn");
     backBtn.addEventListener("click", () => {
-
-        window.location.href =
-            "../orders/orders.html";
-
+        window.location.href = "../orders/orders.html";
     });
 
-
-    // BOTÓN ACTUALIZAR
-    const updateStatusBtn =
-        document.querySelector(
-            "#updateStatusBtn"
-        );
-
-
+    const updateStatusBtn = document.querySelector("#updateStatusBtn");
     updateStatusBtn.addEventListener("click", () => {
-
         updateOrderStatus();
-
     });
-
 }
 
 
 async function updateOrderStatus() {
     const statusSelect = document.querySelector("#statusSelect");
+    const paymentSelect = document.querySelector("#paymentSelect");
     if (!statusSelect) return;
 
     const nuevoEstado = statusSelect.value;
+    const nuevoEstadoPago = paymentSelect ? paymentSelect.value : "Sin pagar";
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-    // Estructurar el cuerpo JSON para enviar al Servlet (idPedido y status)
     const payload = {
         idPedido: currentOrder.id,
-        status: nuevoEstado
+        status: nuevoEstado,
+        estadoPago: nuevoEstadoPago
     };
 
     try {
-        console.log("[DEBUG - updateOrderStatus] Enviando actualización de estado:", payload);
-        
-        // Realizar la petición PUT al servlet de pedidos
         const response = await fetch("http://localhost:8080/turpialJava/pedido", {
             method: "PUT",
             headers: {
@@ -190,23 +178,40 @@ async function updateOrderStatus() {
         });
 
         if (!response.ok) {
-            throw new Error("Error en la respuesta del servidor: Status " + response.status);
+            throw new Error("Error en la respuesta del servidor (Status " + response.status + ")");
         }
 
         const data = await response.json();
-        if (data.status === "success") {
-            // Actualizar localmente para mantener la vista sincronizada
-            currentOrder.status = nuevoEstado;
-            orders[currentIndex] = currentOrder;
-            localStorage.setItem("orders", JSON.stringify(orders));
 
-            loadOrderInfo();
-            alert("¡Estado del pedido actualizado correctamente en MySQL!");
+        if (data.status === "success") {
+            alert("Pedido actualizado exitosamente en la base de datos.");
+            
+            currentOrder.status = nuevoEstado;
+            currentOrder.estadoPago = nuevoEstadoPago;
+            
+            if (currentIndex !== null && orders[currentIndex]) {
+                orders[currentIndex].status = nuevoEstado;
+                orders[currentIndex].estadoPago = nuevoEstadoPago;
+                localStorage.setItem("orders", JSON.stringify(orders));
+            }
+            
+            const orderStatus = document.querySelector("#orderStatus");
+            if (orderStatus) {
+                orderStatus.textContent = `Estado: ${nuevoEstado}`;
+            }
+
+            if (nuevoEstado === "Entregado") {
+                statusSelect.disabled = true;
+            }
+            if (nuevoEstadoPago === "Pagado" && paymentSelect) {
+                paymentSelect.disabled = true;
+            }
         } else {
-            alert("Error al actualizar en la base de datos: " + data.message);
+            alert("No se pudo actualizar el pedido: " + data.message);
         }
+
     } catch (error) {
-        console.error("Error al enviar petición PUT de estado:", error);
-        alert("No se pudo conectar con el servidor. Verifica que Tomcat esté activo.");
+        console.error("Error al actualizar el estado del pedido:", error);
+        alert("Error de conexión al actualizar el pedido.");
     }
 }

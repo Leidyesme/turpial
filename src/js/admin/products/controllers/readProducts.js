@@ -81,80 +81,46 @@ function renderProducts(products) {
             }
         }
 
+        const categoryMap = {
+            "CAT-001": "Desayuno",
+            "CAT-002": "Almuerzo",
+            "CAT-003": "Bebidas",
+            "CAT-004": "Panadería",
+            "CAT-005": "Comida Rápida",
+            "CAT-006": "Promociones"
+        };
+        const categoryDisplay = categoryMap[product.category] || product.category;
+
         card.innerHTML = `
-
-            <img
-                src="${imagePath}"
-
-                alt="${product.name}"
-
-                class="products__img imgforma">
-
-
-            <h2 class="products__name">
-
-                ${product.name}
-
-            </h2>
-
-
-            <p class="products__price">
-
-                Precio: $${product.price}
-
-            </p>
-
-
-            <p class="products__stock">
-
-                Stock: ${product.stock}
-
-            </p>
-
-
-            <p class="products__category">
-
-                Categoría:
-                ${product.category}
-
-            </p>
-
-
-            <p class="products__status">
-
-                ${product.status}
-
-            </p>
+            <img src="${imagePath}" alt="${product.name}" class="products__img imgforma">
+            <h2 class="products__name">${product.name}</h2>
+            <p class="products__price">Precio: $${product.price}</p>
+            <p class="products__stock">Stock: ${product.stock}</p>
+            <p class="products__category">Categoría: ${categoryDisplay}</p>
+            <p class="products__status">${product.status}</p>
 
 
             <div class="products__actions">
-
-                <button
-                    class="btn btn--verde"
-
-                    onclick="updateProduct(${product.id})">
-
+                <button class="btn btn--verde edit-prod-btn" data-id="${product.id}">
                     Editar
-
                 </button>
 
-
-                <button
-                    class="btn btn--rojo"
-
-                    onclick="deleteProduct(${product.id})">
-
+                <button class="btn btn--rojo delete-prod-btn" data-id="${product.id}">
                     Eliminar
-
                 </button>
-
             </div>
-
         `;
 
+        const editBtn = card.querySelector(".edit-prod-btn");
+        if (editBtn) {
+            editBtn.addEventListener("click", () => updateProduct(product.id));
+        }
+
+        const deleteBtn = card.querySelector(".delete-prod-btn");
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", () => deleteProduct(product.id));
+        }
 
         container.appendChild(card);
-
     });
-
 }

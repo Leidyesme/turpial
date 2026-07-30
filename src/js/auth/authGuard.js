@@ -1,6 +1,12 @@
 (function() {
-    // 1. Obtener el usuario activo del localStorage
-    const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+    // 1. Obtener el usuario activo del sessionStorage (prioritario por pestaña) o localStorage
+    let usuarioActivo = JSON.parse(sessionStorage.getItem("usuarioActivo"));
+    if (!usuarioActivo) {
+        usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+        if (usuarioActivo) {
+            sessionStorage.setItem("usuarioActivo", JSON.stringify(usuarioActivo));
+        }
+    }
 
     // Calcular la ruta raíz /src de forma dinámica basándose en la posición de "views" en la URL actual.
     // Esto garantiza que la navegación funcione sin importar la profundidad de la carpeta.
@@ -57,7 +63,18 @@
     // 4. CONFIGURACIÓN DINÁMICA DE LA BARRA DE NAVEGACIÓN INFERIOR (botones--links):
     // Justificación UX: Ajusta dinámicamente los destinos del botón Inicio y la visibilidad del botón Carrito
     // según el rol del usuario logueado.
-    document.addEventListener("DOMContentLoaded", () => {
+        // Actualizar datos visuales del usuario activo (nombre e inicial)
+        const userBtn = document.querySelector(".categories__usuario, .usuario");
+        if (userBtn && usuarioActivo.name) {
+            userBtn.textContent = usuarioActivo.name.charAt(0).toUpperCase();
+        }
+
+        const welcomeTitle = document.querySelector(".categories__title");
+        if (welcomeTitle && usuarioActivo.name) {
+            welcomeTitle.textContent = `¡Bienvenido(a), ${usuarioActivo.name}!`;
+        }
+
+        // Configuración de la barra de navegación estándar
         const navbar = document.querySelector(".botones--links");
         if (navbar) {
             const links = navbar.querySelectorAll("a");
@@ -66,26 +83,54 @@
                 const cartLink = links[1];
                 const profileLink = links[2];
 
-                // Asignar el enlace de perfil correcto para todos
                 profileLink.href = pathToSrc + "views/cliente/profile/profile.html";
 
                 if (usuarioActivo.rol === "ROL-001") {
-                    // Administrador: Redirigir inicio a homePage de admin y ocultar el carrito
                     homeLink.href = pathToSrc + "views/manager/homePage/homePage.html";
                     cartLink.style.display = "none";
                 } else if (usuarioActivo.rol === "ROL-002") {
-                    // Empleado: Redirigir inicio a pantalla de pedidos y ocultar el carrito
                     homeLink.href = pathToSrc + "views/employee/orders/orders.html";
                     cartLink.style.display = "none";
                 } else if (usuarioActivo.rol === "ROL-003") {
-                    // Cliente: Redirigir inicio a categorías y mostrar carrito
                     homeLink.href = pathToSrc + "views/cliente/categories/categories.html";
-                    cartLink.href = pathToSrc + "views/cliente/fastCar/fastCar.html";
+                    cartLink.href = pathToSrc + "views/cliente/fastcar/fastcar.html";
                     cartLink.style.display = "flex";
                 }
             }
         }
-    });
+
+        // Crear botón flotante del carrito superpuesto para clientes
+        const userRole = usuarioActivo ? (usuarioActivo.rol || usuarioActivo.idRol) : "ROL-003";
+        const isClientRole = !userRole || userRole === "ROL-003";
+        const isFastCarPage = window.location.pathname.toLowerCase().includes("fastcar");
+
+        if (isClientRole && !isFastCarPage) {
+            let floatBtn = document.querySelector(".floating-cart-btn");
+            if (!floatBtn) {
+                floatBtn = document.createElement("a");
+                floatBtn.classList.add("floating-cart-btn");
+                floatBtn.href = pathToSrc + "views/cliente/fastcar/fastcar.html";
+                floatBtn.setAttribute("title", "Ver Carrito de Compras");
+                floatBtn.innerHTML = `
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="floating-cart-count">0</span>
+                `;
+                document.body.appendChild(floatBtn);
+            }
+
+            const updateCartBadge = () => {
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+                const countBadge = floatBtn.querySelector(".floating-cart-count");
+                if (countBadge) {
+                    countBadge.textContent = totalItems;
+                    countBadge.style.display = totalItems > 0 ? "flex" : "none";
+                }
+            };
+
+            updateCartBadge();
+            setInterval(updateCartBadge, 800);
+        }
 
     /**
      * Redirige al usuario a la página de inicio correspondiente a su rol.

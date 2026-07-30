@@ -28,23 +28,56 @@ export async function updateProduct(id) {
     document.querySelector("#editProdStock").value = product.stock;
     document.querySelector("#editProdImage").value = product.image || "";
 
+    const defaultCategories = [
+        { idCategoria: "CAT-001", nombre: "Desayunos" },
+        { idCategoria: "CAT-002", nombre: "Almuerzos" },
+        { idCategoria: "CAT-003", nombre: "Bebidas" },
+        { idCategoria: "CAT-004", nombre: "Panadería y repostería" },
+        { idCategoria: "CAT-005", nombre: "Comidas Rapidas" },
+        { idCategoria: "CAT-006", nombre: "Promociones" }
+    ];
+
+    const matchCategory = (catId, catName, prodCategory) => {
+        if (!prodCategory) return false;
+        const pCat = String(prodCategory).toLowerCase().trim();
+        const cId = String(catId).toLowerCase().trim();
+        const cName = String(catName).toLowerCase().trim();
+        if (cId === pCat || cName === pCat) return true;
+        if ((pCat.includes("desayuno") && cName.includes("desayuno")) ||
+            (pCat.includes("almuerzo") && cName.includes("almuerzo")) ||
+            (pCat.includes("bebida") && cName.includes("bebida")) ||
+            (pCat.includes("panad") && cName.includes("panad")) ||
+            (pCat.includes("rapida") && cName.includes("rapida")) ||
+            (pCat.includes("promo") && cName.includes("promo"))) {
+            return true;
+        }
+        return false;
+    };
+
+    const populateCategoryOptions = (categories) => {
+        categorySelect.innerHTML = '<option value="">Seleccione Categoría</option>';
+        categories.forEach(cat => {
+            const option = document.createElement("option");
+            option.value = cat.idCategoria;
+            option.textContent = cat.nombre;
+            if (matchCategory(cat.idCategoria, cat.nombre, product.category)) {
+                option.selected = true;
+            }
+            categorySelect.appendChild(option);
+        });
+    };
+
+    // Pre-llenar inmediatamente con categorías por defecto por si falla o demora el servidor
+    populateCategoryOptions(defaultCategories);
+
     // 3. Cargar las categorías en tiempo real desde el servlet (base de datos)
     try {
         const response = await fetch("http://localhost:8080/turpialJava/producto?accion=listCategories");
         if (response.ok) {
             const categories = await response.json();
-            categorySelect.innerHTML = '<option value="">Seleccione Categoría</option>';
-            categories.forEach(cat => {
-                const option = document.createElement("option");
-                option.value = cat.idCategoria; // ID de categoría en DB (CAT-XXX)
-                option.textContent = cat.nombre;
-                
-                // Pre-seleccionar la categoría actual del producto
-                if (cat.idCategoria === product.category || cat.nombre === product.category) {
-                    option.selected = true;
-                }
-                categorySelect.appendChild(option);
-            });
+            if (Array.isArray(categories) && categories.length > 0) {
+                populateCategoryOptions(categories);
+            }
         }
     } catch (error) {
         console.error("Error al cargar categorías de la base de datos:", error);
@@ -94,15 +127,21 @@ export async function updateProduct(id) {
             return;
         }
 
-        // Cargar el payload JSON para enviar al Servlet
+        let formattedId = String(id);
+        if (/^\d+$/.test(formattedId)) {
+            formattedId = "PROD-" + formattedId.padStart(3, '0');
+        }
+
         const payload = {
-            idProducto: id,
+            idProducto: formattedId,
             name: name,
             price: price,
             stock: stock,
             category: category,
             image: image
         };
+
+        const categoryText = categorySelect.options[categorySelect.selectedIndex] ? categorySelect.options[categorySelect.selectedIndex].text : category;
 
         try {
             console.log("[DEBUG - updateProduct] Enviando petición PUT a servlet con payload:", payload);
@@ -121,15 +160,41 @@ export async function updateProduct(id) {
 
             const data = await response.json();
             if (data.status === "success") {
+                const localProds = JSON.parse(localStorage.getItem("products")) || [];
+                const targetIdx = localProds.findIndex(p => String(p.id) === String(id));
+                if (targetIdx !== -1) {
+                    localProds[targetIdx].name = name;
+                    localProds[targetIdx].price = price;
+                    localProds[targetIdx].stock = stock;
+                    localProds[targetIdx].category = categoryText;
+                    localProds[targetIdx].image = image;
+                    localProds[targetIdx].status = stock > 0 ? "Disponible" : "Agotado";
+                    localStorage.setItem("products", JSON.stringify(localProds));
+                }
                 alert("¡Producto actualizado con éxito en la base de datos MySQL!");
                 editModal.style.display = "none";
-                await loadProducts(); // Recargar el listado de productos de forma dinámica
+                loadProducts();
             } else {
                 alert("Error al actualizar en la base de datos: " + data.message);
             }
         } catch (error) {
             console.error("Error al enviar petición PUT:", error);
-            alert("No se pudo conectar con el servidor. Verifica que Tomcat y MySQL estén activos.");
+            const localProds = JSON.parse(localStorage.getItem("products")) || [];
+            const targetIdx = localProds.findIndex(p => String(p.id) === String(id));
+            if (targetIdx !== -1) {
+                localProds[targetIdx].name = name;
+                localProds[targetIdx].price = price;
+                localProds[targetIdx].stock = stock;
+                localProds[targetIdx].category = categoryText;
+                localProds[targetIdx].image = image;
+                localProds[targetIdx].status = stock > 0 ? "Disponible" : "Agotado";
+                localStorage.setItem("products", JSON.stringify(localProds));
+                alert("Producto actualizado localmente.");
+                editModal.style.display = "none";
+                loadProducts();
+            } else {
+                alert("No se pudo conectar con el servidor para actualizar el producto.");
+            }
         }
     };
 }

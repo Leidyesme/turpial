@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Turpial</title>
+    <title>El Turpial - Inicio</title>
     <link rel="stylesheet" href="style/main.css">
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="public/turpial.png">
+    <script>
+        // Redirigir siempre directamente al login al iniciar Live Server sobre la raíz
+        window.location.href = "src/views/auth/login/login.html";
+    </script>
 </head>
 <body>
     <div class="container">
         <div class="logo">
             <a href="src/views/auth/login/login.html" class="logo__link">
-                <img src="../../../../public/turpial.png" class="logo__img" alt="El turplial logo">
+                <img src="public/turpial.png" class="logo__img" alt="El Turpial Logo">
             </a>
         </div>
     </div>

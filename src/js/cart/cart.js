@@ -6,16 +6,27 @@ export function addToCart(product) {
             localStorage.getItem("cart")
         ) || [];
 
-    // BUSCAR PRODUCTO EXISTENTE
-    const existingProduct =
-        cart.find(item =>
-
-            item.name === product.name
-        );
-
-    // OBTENER STOCK DE DB LOCAL
+    // OBTENER STOCK Y PRODUCTOS DE DB LOCAL DE MANERA ROBUSTA
     const productsDb = JSON.parse(localStorage.getItem("products")) || [];
-    const matchedDb = productsDb.find(item => item.name === product.name);
+    
+    // RESOLVER ID REAL DEL PRODUCTO (PROD-XXX)
+    let resolvedId = product.id || product.idProducto || "";
+    
+    // Buscar coincidencia en productosDb para resolver ID o datos faltantes
+    const matchedDb = productsDb.find(item => 
+        (resolvedId && (item.id === resolvedId || item.idProducto === resolvedId)) ||
+        (item.name && product.name && (item.name.toLowerCase().includes(product.name.toLowerCase()) || product.name.toLowerCase().includes(item.name.toLowerCase())))
+    );
+
+    if (matchedDb && !resolvedId) {
+        resolvedId = matchedDb.id || matchedDb.idProducto || "";
+    }
+
+    // BUSCAR PRODUCTO EXISTENTE EN EL CARRITO
+    const existingProduct = cart.find(item =>
+        (resolvedId && (item.id === resolvedId || item.idProducto === resolvedId)) ||
+        (item.name && product.name && item.name === product.name)
+    );
 
     if (matchedDb) {
         const maxStock = parseInt(matchedDb.stock) || 0;
@@ -33,35 +44,25 @@ export function addToCart(product) {
         return;
     }
 
-    // SI YA EXISTE
+    // SI YA EXISTE EN CARRITO
     if (existingProduct) {
-
         existingProduct.quantity += 1;
-
-    }
-
-    else {
-
-        // AGREGAR NUEVO
+        if (resolvedId) {
+            existingProduct.id = resolvedId;
+            existingProduct.idProducto = resolvedId;
+        }
+    } else {
+        // AGREGAR NUEVO PRODUCTO CON PROPIEDADES ESTÁNDAR
         cart.push({
-
             ...product,
-
+            id: resolvedId,
+            idProducto: resolvedId,
             quantity: 1
-
         });
-
     }
 
-    // GUARDAR
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
+    // GUARDAR CARRITO ACTUALIZADO
+    localStorage.setItem("cart", JSON.stringify(cart));
 
-
-    alert(
-        "Producto agregado al carrito"
-    );
-
+    alert("Producto agregado al carrito");
 }
