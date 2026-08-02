@@ -12,14 +12,42 @@ import {
 from "../services/productService.js";
 
 
+export function setupProductSearch() {
+    const searchInput = document.querySelector("#searchInput");
+    if (!searchInput) return;
+    searchInput.oninput = () => {
+        loadProducts();
+    };
+}
+
 export function loadProducts() {
+    const products = getProducts();
+    const searchInput = document.querySelector("#searchInput");
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
-    const products =
-        getProducts();
+    if (!query) {
+        renderProducts(products);
+        return;
+    }
 
+    const categoryMap = {
+        "CAT-001": "Desayuno",
+        "CAT-002": "Almuerzo",
+        "CAT-003": "Bebidas",
+        "CAT-004": "Panadería",
+        "CAT-005": "Comida Rápida",
+        "CAT-006": "Promociones"
+    };
 
-    renderProducts(products);
+    const filtered = products.filter(p => {
+        const name = (p.name || "").toLowerCase();
+        const cat = (categoryMap[p.category] || p.category || "").toLowerCase();
+        const status = (p.status || "").toLowerCase();
+        const price = String(p.price || "");
+        return name.includes(query) || cat.includes(query) || status.includes(query) || price.includes(query);
+    });
 
+    renderProducts(filtered);
 }
 
 

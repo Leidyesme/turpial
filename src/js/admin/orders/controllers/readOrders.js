@@ -36,13 +36,44 @@ export async function loadOrders() {
             throw new Error(data.message);
         }
 
-        const orders = data.orders || [];
+        let orders = data.orders || [];
         container.innerHTML = "";
+
+        const searchInput = document.querySelector("#adminOrderSearch");
+        const paymentFilter = document.querySelector("#adminOrderPaymentFilter");
+
+        if (searchInput && !searchInput.dataset.listening) {
+            searchInput.dataset.listening = "true";
+            searchInput.oninput = () => loadOrders();
+        }
+        if (paymentFilter && !paymentFilter.dataset.listening) {
+            paymentFilter.dataset.listening = "true";
+            paymentFilter.onchange = () => loadOrders();
+        }
+
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        const payStatus = paymentFilter ? paymentFilter.value.trim() : "";
+
+        if (query || payStatus) {
+            orders = orders.filter(order => {
+                if (payStatus && (order.estadoPago || order.estado_pago || "Sin pagar") !== payStatus) {
+                    return false;
+                }
+                if (query) {
+                    const idStr = String(order.idPedido || "").toLowerCase();
+                    const clientStr = String(order.customerName || "").toLowerCase();
+                    const statusStr = String(order.status || "").toLowerCase();
+                    const tipoStr = String(order.tipoEntrega || "").toLowerCase();
+                    return idStr.includes(query) || clientStr.includes(query) || statusStr.includes(query) || tipoStr.includes(query);
+                }
+                return true;
+            });
+        }
 
         if (orders.length === 0) {
             container.innerHTML = `
                 <p class="adminOrders__empty" style="text-align: center; margin: 20px; font-weight: bold;">
-                    No hay pedidos registrados en el sistema.
+                    No se encontraron pedidos con los criterios ingresados.
                 </p>
             `;
             return;

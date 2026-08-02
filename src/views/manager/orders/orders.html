@@ -10,6 +10,14 @@
     <div class="container">
         <div class="adminOrders">
             <h1 class="adminOrders__title">Gestión de Pedidos</h1>
+            <div class="adminOrders__filters" style="display: flex; flex-wrap: wrap; gap: 10px; width: 90%; max-width: 400px; margin: 10px auto; justify-content: center;">
+                <input type="text" id="adminOrderSearch" class="input" placeholder="Buscar por #Pedido, cliente o estado" style="width: 100%; box-sizing: border-box;">
+                <select id="adminOrderPaymentFilter" class="input" style="width: 100%; box-sizing: border-box;">
+                    <option value="">Todos los estados de pago</option>
+                    <option value="Pagado">Pagado</option>
+                    <option value="Sin pagar">Sin pagar</option>
+                </select>
+            </div>
             <div id="ordersContainer" class="adminOrders__container">
             
             </div>

@@ -10,6 +10,14 @@ import {
 from "./deleteEmployee.js";
 
 
+export function setupEmployeeSearch() {
+    const searchInput = document.querySelector("#searchEmployee");
+    if (!searchInput) return;
+    searchInput.oninput = () => {
+        loadEmployees();
+    };
+}
+
 export async function loadEmployees() {
     try {
         const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=listEmployees", {
@@ -23,7 +31,21 @@ export async function loadEmployees() {
         }
         const data = await response.json();
         if (data.status === "success") {
-            renderEmployees(data.employees || []);
+            let employeesToRender = data.employees || [];
+            const searchInput = document.querySelector("#searchEmployee");
+            const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+            if (query) {
+                employeesToRender = employeesToRender.filter(emp => {
+                    const name = (emp.name || "").toLowerCase();
+                    const email = (emp.email || "").toLowerCase();
+                    const role = (emp.role === "ROL-001" ? "administrador" : emp.role === "ROL-002" ? "empleado" : String(emp.role)).toLowerCase();
+                    const status = (emp.status || "").toLowerCase();
+                    return name.includes(query) || email.includes(query) || role.includes(query) || status.includes(query);
+                });
+            }
+
+            renderEmployees(employeesToRender);
         } else {
             alert("Error al cargar empleados: " + data.message);
         }
