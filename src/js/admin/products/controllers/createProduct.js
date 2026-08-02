@@ -13,8 +13,34 @@ export function setupAddProduct(loadProducts) {
     // Cargar categorías desde el backend al iniciar el controlador
     loadCategories(categorySelect);
 
+    const prodImageFile = document.querySelector("#prodImageFile");
+    const prodImageHidden = document.querySelector("#prodImage");
+    const prodImageTag = document.querySelector("#prodImageTag");
+
+    if (prodImageFile) {
+        prodImageFile.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    if (prodImageHidden) prodImageHidden.value = event.target.result;
+                    if (prodImageTag) {
+                        prodImageTag.src = event.target.result;
+                        prodImageTag.style.display = "block";
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+
     addButton.addEventListener("click", () => {
         form.reset();
+        if (prodImageHidden) prodImageHidden.value = "";
+        if (prodImageTag) {
+            prodImageTag.src = "";
+            prodImageTag.style.display = "none";
+        }
         document.querySelector("#modalTitle").textContent = "Agregar Producto";
         modal.style.display = "flex";
     });

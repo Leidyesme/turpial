@@ -72,6 +72,7 @@ export async function loadOrders() {
                     <p style="margin: 3px 0;"><strong>Cliente:</strong> ${order.customerName || 'Cliente Anónimo'}</p>
                     <p style="margin: 3px 0;"><strong>Tipo Entrega:</strong> ${order.tipoEntrega || 'No especificado'}</p>
                     <p style="margin: 3px 0;"><strong>Estado:</strong> ${order.status}</p>
+                    <p style="margin: 3px 0;"><strong>Estado de Pago:</strong> <span style="font-weight: bold; color: ${(order.estadoPago || order.estado_pago || '').toLowerCase() === 'pagado' ? '#2e7d32' : '#d32f2f'};">${order.estadoPago || order.estado_pago || 'Sin pagar'}</span></p>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 5px; border-top: 1px dashed #ccc; padding-top: 5px;">
                     <span>Total:</span>

@@ -63,10 +63,10 @@ function renderProducts(products) {
         );
 
 
-        // Centralizar rutas de imágenes de forma robusta para compatibilidad con Live Server, Vite y file://
+        // Centralizar rutas de imágenes de forma robusta para compatibilidad con Live Server, Vite, file:// y Data URLs (Base64)
         let imagePath = "/turpial.png";
         if (product.image && product.image !== "null" && product.image !== "undefined" && product.image.trim() !== "") {
-            if (product.image.startsWith("http://") || product.image.startsWith("https://")) {
+            if (product.image.startsWith("http://") || product.image.startsWith("https://") || product.image.startsWith("data:")) {
                 imagePath = product.image;
             } else {
                 let cleanPath = product.image;
@@ -92,7 +92,7 @@ function renderProducts(products) {
         const categoryDisplay = categoryMap[product.category] || product.category;
 
         card.innerHTML = `
-            <img src="${imagePath}" alt="${product.name}" class="products__img imgforma">
+            <img src="${imagePath}" alt="${product.name}" class="products__img imgforma" onerror="this.onerror=null; this.src='../../../../public/turpial.png';">
             <h2 class="products__name">${product.name}</h2>
             <p class="products__price">Precio: $${product.price}</p>
             <p class="products__stock">Stock: ${product.stock}</p>

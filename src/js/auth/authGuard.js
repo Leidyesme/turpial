@@ -27,6 +27,17 @@
         return;
     }
 
+    // 2.1 Si la cuenta del usuario se encuentra inactiva, denegar acceso total
+    if (usuarioActivo.estado && usuarioActivo.estado.toLowerCase() === "inactivo") {
+        alert("Su cuenta se encuentra inactiva. Comuníquese con el administrador.");
+        sessionStorage.removeItem("usuarioActivo");
+        localStorage.removeItem("usuarioActivo");
+        if (!window.location.pathname.includes("login.html")) {
+            window.location.href = pathToSrc + "views/auth/login/login.html";
+        }
+        return;
+    }
+
     // 3. ENRUTAMIENTO SENSIBLE A ROLES (RBAC):
     // Justificación de negocio: Evitar que usuarios accedan a carpetas restringidas para otros roles.
     const pathname = window.location.pathname;

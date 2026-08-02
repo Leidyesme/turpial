@@ -36,7 +36,12 @@
                 <select id="prodCategory" class="input" required>
                     <option value="">Seleccione Categoría</option>
                 </select>
-                <input type="text" id="prodImage" class="input" placeholder="Ruta de Imagen (Ej: /breakfast/breakfast1.png)">
+                <label style="font-size: 13px; font-weight: bold; margin-top: 5px; text-align: left;">Imagen del Producto:</label>
+                <input type="file" id="prodImageFile" class="input" accept="image/*" style="padding: 5px;">
+                <input type="hidden" id="prodImage">
+                <div id="prodImagePreview" style="margin: 5px 0; text-align: center;">
+                    <img id="prodImageTag" src="" alt="Vista previa" style="max-height: 80px; max-width: 100%; border-radius: 8px; display: none; margin: 0 auto;">
+                </div>
                 <div class="modal-actions" style="display: flex; justify-content: space-between; margin-top: 10px; width: 100%;">
                     <button type="button" id="cancelProdBtn" class="btn btn--rojo" style="padding: 10px 20px;">Cancelar</button>
                     <button type="submit" class="btn btn--verde" style="padding: 10px 20px;">Guardar</button>
@@ -57,7 +62,12 @@
                 <select id="editProdCategory" class="input" required>
                     <option value="">Seleccione Categoría</option>
                 </select>
-                <input type="text" id="editProdImage" class="input" placeholder="Ruta de Imagen (Ej: /breakfast/breakfast1.png)">
+                <label style="font-size: 13px; font-weight: bold; margin-top: 5px; text-align: left;">Imagen del Producto:</label>
+                <input type="file" id="editProdImageFile" class="input" accept="image/*" style="padding: 5px;">
+                <input type="hidden" id="editProdImage">
+                <div id="editProdImagePreview" style="margin: 5px 0; text-align: center;">
+                    <img id="editProdImageTag" src="" alt="Vista previa" style="max-height: 80px; max-width: 100%; border-radius: 8px; display: none; margin: 0 auto;">
+                </div>
                 <div class="modal-actions" style="display: flex; justify-content: space-between; margin-top: 15px; width: 100%; gap: 10px;">
                     <button type="button" id="cancelEditProdBtn" class="btn btn--rojo" style="padding: 10px 20px; flex: 1;">Cancelar</button>
                     <button type="submit" class="btn btn--verde" style="padding: 10px 20px; flex: 1;">Guardar</button>

@@ -12,10 +12,7 @@ if (usuarioActivo.idUsuario === id) {
     return;
 }
 
-    const confirmDelete =
-        confirm(
-            "¿Eliminar empleado?"
-        );
+    const confirmDelete = confirm("¿Seguro que quieres eliminar este empleado?");
 
 
     if (!confirmDelete) return;

@@ -93,7 +93,7 @@ function renderEmployees(employees) {
             <p class="employees__role">
 
                 Cargo:
-                ${employee.role}
+                ${employee.role === 'ROL-001' ? 'Administrador' : (employee.role === 'ROL-002' ? 'Empleado' : (employee.role === 'ROL-003' ? 'Cliente' : employee.role))}
 
             </p>
 
@@ -101,7 +101,7 @@ function renderEmployees(employees) {
             <p class="employees__status">
 
                 Estado:
-                ${employee.status}
+                <span style="font-weight: bold; color: ${employee.status === 'Activo' ? '#2e7d32' : '#d32f2f'};">${employee.status || 'Inactivo'}</span>
 
             </p>
 
@@ -117,6 +117,14 @@ function renderEmployees(employees) {
 
                 </button>
 
+                <button
+                    class="btn ${employee.status === 'Activo' ? 'btn--rojo' : 'btn--verde'}"
+
+                    onclick="toggleEmployeeStatus('${employee.id}', '${employee.status === 'Activo' ? 'Inactivo' : 'Activo'}')">
+
+                    ${employee.status === 'Activo' ? 'Desactivar' : 'Activar'}
+
+                </button>
 
                 <button
                     class="btn btn--rojo"
@@ -140,10 +148,58 @@ function renderEmployees(employees) {
 
 }
 
+export async function toggleEmployeeStatus(id, newStatus) {
+    try {
+        const readResp = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=readUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ idUsuario: id })
+        });
+        if (!readResp.ok) {
+            throw new Error("Error al consultar el empleado");
+        }
+        const empData = await readResp.json();
+        if (empData.status !== "success") {
+            alert("No se encontró el empleado");
+            return;
+        }
 
-window.updateEmployee =
-    updateEmployee;
+        const payload = {
+            id: id,
+            name: empData.name,
+            email: empData.email,
+            phone: empData.phone || "",
+            role: empData.idRol || "ROL-002",
+            status: newStatus
+        };
 
+        const response = await fetch("http://localhost:8080/turpialJava/UsuarioServlet?accion=updateEmployee", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-window.deleteEmployee =
-    deleteEmployee;
+        if (!response.ok) {
+            throw new Error("Error en la respuesta del servidor");
+        }
+
+        const data = await response.json();
+        if (data.status === "success") {
+            alert(`El empleado ha sido cambiado a estado '${newStatus}'.`);
+            loadEmployees();
+        } else {
+            alert("Error al cambiar el estado: " + data.message);
+        }
+    } catch (error) {
+        console.error("Error al cambiar el estado del empleado:", error);
+        alert("No se pudo conectar con el servidor para cambiar el estado.");
+    }
+}
+
+window.updateEmployee = updateEmployee;
+window.deleteEmployee = deleteEmployee;
+window.toggleEmployeeStatus = toggleEmployeeStatus;

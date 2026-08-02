@@ -26,7 +26,39 @@ export async function updateProduct(id) {
     document.querySelector("#editProdName").value = product.name;
     document.querySelector("#editProdPrice").value = product.price;
     document.querySelector("#editProdStock").value = product.stock;
-    document.querySelector("#editProdImage").value = product.image || "";
+    
+    const hiddenImgInput = document.querySelector("#editProdImage");
+    const imgFilePicker = document.querySelector("#editProdImageFile");
+    const imgTag = document.querySelector("#editProdImageTag");
+
+    if (hiddenImgInput) hiddenImgInput.value = product.image || "";
+    if (imgFilePicker) imgFilePicker.value = "";
+    if (imgTag) {
+        if (product.image) {
+            imgTag.src = product.image;
+            imgTag.style.display = "block";
+        } else {
+            imgTag.style.display = "none";
+            imgTag.src = "";
+        }
+    }
+
+    if (imgFilePicker) {
+        imgFilePicker.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    if (hiddenImgInput) hiddenImgInput.value = event.target.result;
+                    if (imgTag) {
+                        imgTag.src = event.target.result;
+                        imgTag.style.display = "block";
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
 
     const defaultCategories = [
         { idCategoria: "CAT-001", nombre: "Desayunos" },
